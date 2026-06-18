@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 32be507d6810c10418660dddd1143123
+guid: ac13227d6704f2c42b8efcfcbd75ec45
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4374275736419374680
-    second: daegun_ingame_0
+      213: 2204831278160144044
+    second: attack01_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,7 +48,7 @@ TextureImporter:
   compressionQuality: 50
   spriteMode: 2
   spriteExtrude: 1
-  spriteMeshType: 0
+  spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 24
@@ -72,10 +72,10 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 128
+    maxTextureSize: 256
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 0
+    textureCompression: 1
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -113,23 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: daegun_ingame_0
+      name: attack01_0
       rect:
         serializedVersion: 2
-        x: 4
-        y: 0
-        width: 66
-        height: 71
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+        x: 31
+        y: 30
+        width: 91
+        height: 67
+      alignment: 4
+      pivot: {x: 0, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8a9ec15c4637b43c0800000000000000
-      internalID: -4374275736419374680
+      spriteID: ca6e764ad52299e10800000000000000
+      internalID: 2204831278160144044
       vertices: []
       indices: 
       edges: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: f1394089a5cce364fa67ce6ce631fd8c
+    spriteID: 9a53cbb2e44a75548854e1fde4dc13b6
     internalID: 0
     vertices: []
     indices: 
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      daegun_ingame_0: -4374275736419374680
+      attack01_0: 2204831278160144044
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
