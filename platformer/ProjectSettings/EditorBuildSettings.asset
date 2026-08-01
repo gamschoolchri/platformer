@@ -15,4 +15,4 @@ EditorBuildSettings:
     path: Assets/Scenes/Scene_gameOvered.unity
     guid: 5c779d32e003aff4a9e36da4818dee8d
   m_configObjects:
-    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: db3de75dc2e1d7d4a997faeefb575b4c, type: 3}
