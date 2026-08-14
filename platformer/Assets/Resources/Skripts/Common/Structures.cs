@@ -22,16 +22,11 @@ public struct HitData
 {
     public float damage;
     public float knockback;
-    public Buff[] buff;
-    public DeBuff[] debuff;
+    public Buff[] buffs;
+    public DeBuff[] debuffs;
 
 }
-[System.Serializable]
-public struct Stats
-{
-    public int? hp;
-    public int? energe;
-}
+
 
 [System.Serializable]
 public struct Animation
@@ -51,6 +46,13 @@ public struct HitboxData
 }
 
 [System.Serializable]
+public struct HurtboxData
+{
+    public Vector2 size;
+    public Vector2 offset;
+}
+
+[System.Serializable]
 public struct EffectData
 {
     public string prefabPath;
@@ -62,13 +64,29 @@ public struct EffectData
 
 
 [System.Serializable]
+public struct EntityData
+{
+    public string entityName;
+    public Vector2 size;
+    public int health;
+    public int energy;
+    public float moveSpeed;
+    public Buff[] buffs;
+    public DeBuff[] debuffs;
+
+    public HurtboxData hurtboxData;
+
+
+}
+
+[System.Serializable]
 public struct SkillData
 {
     public string skillName;
     public string animationTrigger;
     public float coolDown;
     public float duration;
-    public int useEnerge;
+    public int useEnergy;
 
     public MovementType movementType;
     public HitboxData hitboxData;

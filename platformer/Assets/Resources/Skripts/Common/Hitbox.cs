@@ -1,6 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D))]
+[RequireComponent(typeof(Skill))]
 public class Hitbox : MonoBehaviour
 {
     private BoxCollider2D col;
@@ -12,9 +13,9 @@ public class Hitbox : MonoBehaviour
         col = GetComponent<BoxCollider2D>();
         col.isTrigger = true;
     }
-    public void Setup(Vector3 scale, HitboxData hitboxData)
+    public void Setup(HitboxData hitboxData)
     {
-        transform.localScale = scale;
+        transform.localScale = hitboxData.size;
         col.size = Vector2.one;
         duration = hitboxData.duration;
         hitData = hitboxData.hitData;
@@ -25,24 +26,23 @@ public class Hitbox : MonoBehaviour
         timer += Time.fixedDeltaTime;
         if (timer > duration) gameObject.SetActive(false);
     }
-    private void TriggerEnter2D(Collider2D other)
+
+    void OTriggerEnter2D(Collider2D collision)
     {
-        if (other.CompareTag("enemy"))
+        Hurtbox hurtbox = collision.GetComponent<Hurtbox>();
+        if (hurtbox != null)
         {
-            other.GetComponent<enemy>().Onhit(hitData);
+            hurtbox.OnHit(hitData);
         }
     }
+
+
+
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
 
-        // 콜라이더의 월드 좌표 중심점 구하기
-        Vector3 center = transform.TransformPoint(col.offset);
-        // 콜라이더의 크기 구하기
-        Vector3 size = col.size;
-
-        // 회전값까지 고려해서 속이 빈 상자(기즈모) 그리기
         Gizmos.matrix = transform.localToWorldMatrix;
         Gizmos.DrawWireCube(col.offset, col.size);
     }

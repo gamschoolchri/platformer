@@ -1,12 +1,10 @@
-using System.IO;
 using UnityEngine;
 using Newtonsoft.Json;
-using Unity.VisualScripting;
 public class Skill : MonoBehaviour
 {
     public string fileName = "Skill_001";
 
-    private MovementType movementType;
+    [field: SerializeField] public MovementType movementType { get; private set; }
     private SkillData skillData;
 
     private Hitbox hitboxPrefab;
@@ -22,7 +20,6 @@ public class Skill : MonoBehaviour
     void Awake()
     {
         TextAsset jsonFile = Resources.Load<TextAsset>($"Skills/Data/{fileName}");
-        Debug.Log($"Skills/Data/{fileName}");
         if (jsonFile != null)
         {
             skillData = JsonConvert.DeserializeObject<SkillData>(jsonFile.text);
@@ -35,7 +32,6 @@ public class Skill : MonoBehaviour
         if (hitboxPrefab == null || effectPrefab == null)
         {
             Debug.LogError($"[에러] 경로가 틀렸거나 파일이 없습니다: {hitboxPrefab == null} {effectPrefab == null}");
-            return;
         }
     }
 
@@ -44,7 +40,7 @@ public class Skill : MonoBehaviour
 
         if (hitbox == null) hitbox = Instantiate(hitboxPrefab);
 
-        hitbox.Setup(new Vector3(skillData.hitboxData.size.x, skillData.hitboxData.size.y, 1f), skillData.hitboxData);
+        hitbox.Setup(skillData.hitboxData);
         hitbox.transform.SetParent(transform);
         hitbox.transform.localPosition = new(skillData.hitboxData.offset.x * facing, skillData.hitboxData.offset.y, 0);
 
@@ -78,9 +74,5 @@ public class Skill : MonoBehaviour
         }
         if (timer > skillData.duration) gameObject.SetActive(false);
 
-    }
-    public MovementType MovementType
-    {
-        get { return movementType; }
     }
 }

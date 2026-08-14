@@ -44,7 +44,7 @@ public class SkillManager : MonoBehaviour
             obj = Instantiate(prefab);
             pool[skillName].Add(obj);
         }
-        if (obj.MovementType == MovementType.Attatched)
+        if (obj.movementType == MovementType.Attatched)
         {
             obj.transform.SetParent(parent.transform);
             obj.transform.localPosition = Vector3.zero;

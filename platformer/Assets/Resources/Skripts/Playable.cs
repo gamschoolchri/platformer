@@ -1,19 +1,16 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
-[RequireComponent(typeof(Statement))]
+[RequireComponent(typeof(Entity))]
 public class Playable : MonoBehaviour
 {
 
+
     [Header("Components")]
     private Rigidbody2D rb;
-    private Statement st;
+    private Entity ent;
     public float gravityScale = 1.0f;
 
     private enum ActionType { none, jump, roll, skill_1, skill_2, skill_3, skill_4 };
@@ -44,12 +41,6 @@ public class Playable : MonoBehaviour
     private float rollSpeedY;
     private bool isAirRolled = false;
 
-    [Header("Rolling Settings")]
-
-
-    [Header("Ground Check")]
-    public Vector2 groundCheck = new(0.5f, 0.1f);
-    public LayerMask groundLayer;
 
     [Header("State Monitor (Debug)")]
     [SerializeField] private ActionType actionQueue;
@@ -68,10 +59,10 @@ public class Playable : MonoBehaviour
 
 
 
-    private void Awake()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        st = GetComponent<Statement>();
+        ent = GetComponent<Entity>();
 
         jumpSpeedY = Mathf.Sqrt(-2f * Physics2D.gravity.y * gravityScale * jumpDY);
         rollSpeedX = (rollDX / rollDuration) * 2f;
@@ -79,9 +70,8 @@ public class Playable : MonoBehaviour
         commands = new Command();
     }
 
-    private void OnEnable()
+    void OnEnable()
     {
-
         commands.Player.Jump.started += ctx => EnQueueAction(ActionType.jump);
         commands.Player.Roll.started += ctx => EnQueueAction(ActionType.roll);
 
@@ -89,15 +79,14 @@ public class Playable : MonoBehaviour
         commands.Player.Skills.started += ctx =>
         {
             int skillIndex = (int)ctx.ReadValue<float>() - 1;
-            SkillManager.Instance.SpawnSkill("Skill_001", gameObject, st.facing);
+            SkillManager.Instance.SpawnSkill("Skill_001", gameObject, ent.facing);
         };
 
         commands.Player.Enable();
     }
 
 
-
-    private void FixedUpdate()
+    void FixedUpdate()
     {
         UpdateTimer();
         if (timers["queue"] == 0f) actionQueue = ActionType.none;
@@ -108,15 +97,13 @@ public class Playable : MonoBehaviour
         }
         Vector2 currVelocity = rb.linearVelocity;
 
-        st.isGround = Physics2D.OverlapBox(transform.position, groundCheck, 0f, groundLayer) != null;
-        st.isMoving = currVelocity.sqrMagnitude > 0.01f;
 
         float accelRate;
         if (timers["roll"] > 0f)
         {
             if (timers["roll"] > rollDuration * 0.5f)
             {
-                MoveDirectionX = st.facing * rollSpeedX;
+                MoveDirectionX = ent.facing * rollSpeedX;
                 accelRate = acceleration;
             }
             else
@@ -132,13 +119,12 @@ public class Playable : MonoBehaviour
             if (currVelocity.x * MoveDirectionX < 0f) accelRate *= 2f;
         }
 
-        int sign = Math.Sign(MoveDirectionX);
-        if (sign != 0) st.facing = sign;
+
         currVelocity.x = Mathf.MoveTowards(currVelocity.x, MoveDirectionX, accelRate * Time.fixedDeltaTime);
 
 
 
-        if (st.isGround)
+        if (ent.isGround)
         {
             isAirRolled = false;
         }
@@ -167,10 +153,10 @@ public class Playable : MonoBehaviour
             case ActionType.roll:
                 if (CanDoAction(ActionType.roll))
                 {
-                    if (!st.isGround)
+                    if (!ent.isGround)
                     {
                         currVelocity.y = rollSpeedY;
-                        currVelocity.x += st.facing * rollDX / 5;
+                        currVelocity.x += ent.facing * rollDX / 5;
                         isAirRolled = true;
                     }
 
@@ -190,7 +176,7 @@ public class Playable : MonoBehaviour
         rb.linearVelocity = currVelocity;
     }
 
-    private void OnDisable()
+    void OnDisable()
     {
         commands.Player.Disable();
     }
@@ -209,18 +195,18 @@ public class Playable : MonoBehaviour
     }
     private bool CanDoAction(ActionType action)
     {
-        if (st.isAction) return false;
+        if (ent.isAction) return false;
 
         if (action == ActionType.jump)
         {
-            if (st.isGround) return true;
+            if (ent.isGround) return true;
             return false;
         }
         if (action == ActionType.roll)
         {
             if (timers["Cooldown_roll"] == 0f)
             {
-                if (st.isGround || !isAirRolled) return true;
+                if (ent.isGround || !isAirRolled) return true;
             }
             return false;
         }

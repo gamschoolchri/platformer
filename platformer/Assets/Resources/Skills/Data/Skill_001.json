@@ -2,8 +2,8 @@
     "skillName": "DivineHand",
     "animationTrigger": "null",
     "coolDown": 20.0,
-    "duration": 2.0,
-    "useEnerge": 40,
+    "duration": 3.0,
+    "useEnergy": 40,
     "movementType": "Static",
     "hitboxData": {
         "startup": 1.0,
@@ -19,14 +19,14 @@
         "hitData": {
             "damage": 50.0,
             "knockback": 2.5,
-            "buff": [],
-            "debuff": []
+            "buffs": [],
+            "debuffs": []
         }
     },
     "effectData": {
         "prefabPath": "Skills/Effects/Skill_001/FX_Skill_001",
         "startup": 0.0,
-        "duration": 2.0,
+        "duration": 3.0,
         "size": {
             "x": 1.0,
             "y": 1.0

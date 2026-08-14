@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 7388229479702116908}
   - component: {fileID: 6069025288788704759}
-  - component: {fileID: 8299193268424805341}
+  - component: {fileID: 2745739211993905557}
   m_Layer: 0
-  m_Name: Hitbox
+  m_Name: Hurtbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -79,7 +79,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &8299193268424805341
+--- !u!114 &2745739211993905557
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -88,6 +88,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 6739123090979916667}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcc6d6123d645df4081bfed90aff6f8d, type: 3}
+  m_Script: {fileID: 11500000, guid: 4adab29b77491a84fadb7ea0570f6f4d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Assembly-CSharp::Hurtbox
