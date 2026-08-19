@@ -67,11 +67,12 @@ public class Playable : MonoBehaviour
         jumpSpeedY = Mathf.Sqrt(-2f * Physics2D.gravity.y * gravityScale * jumpDY);
         rollSpeedX = (rollDX / rollDuration) * 2f;
         rollSpeedY = Mathf.Sqrt(-2f * Physics2D.gravity.y * gravityScale * rollDY);
-        commands = new Command();
+        commands ??= new Command();
     }
 
     void OnEnable()
     {
+        commands ??= new Command();
         commands.Player.Jump.started += ctx => EnQueueAction(ActionType.jump);
         commands.Player.Roll.started += ctx => EnQueueAction(ActionType.roll);
 
@@ -79,10 +80,10 @@ public class Playable : MonoBehaviour
         commands.Player.Skills.started += ctx =>
         {
             int skillIndex = (int)ctx.ReadValue<float>() - 1;
-            SkillManager.Instance.SpawnSkill("Skill_001", gameObject, ent.facing);
+            SkillManager.Instance.SpawnSkill(gameObject, "Skill_001", ent.facing);
         };
 
-        commands.Player.Enable();
+        commands.Enable();
     }
 
 
@@ -124,7 +125,7 @@ public class Playable : MonoBehaviour
 
 
 
-        if (ent.isGround)
+        if (ent.isfloor)
         {
             isAirRolled = false;
         }
@@ -153,7 +154,7 @@ public class Playable : MonoBehaviour
             case ActionType.roll:
                 if (CanDoAction(ActionType.roll))
                 {
-                    if (!ent.isGround)
+                    if (!ent.isfloor)
                     {
                         currVelocity.y = rollSpeedY;
                         currVelocity.x += ent.facing * rollDX / 5;
@@ -178,7 +179,7 @@ public class Playable : MonoBehaviour
 
     void OnDisable()
     {
-        commands.Player.Disable();
+        commands.Disable();
     }
 
 
@@ -199,14 +200,14 @@ public class Playable : MonoBehaviour
 
         if (action == ActionType.jump)
         {
-            if (ent.isGround) return true;
+            if (ent.isfloor) return true;
             return false;
         }
         if (action == ActionType.roll)
         {
             if (timers["Cooldown_roll"] == 0f)
             {
-                if (ent.isGround || !isAirRolled) return true;
+                if (ent.isfloor || !isAirRolled) return true;
             }
             return false;
         }

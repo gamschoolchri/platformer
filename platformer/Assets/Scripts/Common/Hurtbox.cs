@@ -11,7 +11,7 @@ public class Hurtbox : MonoBehaviour
     }
     public void Setup(HurtboxData hurtboxData)
     {
-        transform.localScale = hurtboxData.size;
+        transform.localScale = hurtboxData.Size;
         col.size = Vector2.one;
     }
 

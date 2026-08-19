@@ -1,7 +1,6 @@
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D))]
-[RequireComponent(typeof(Skill))]
 public class Hitbox : MonoBehaviour
 {
     private BoxCollider2D col;
@@ -13,12 +12,13 @@ public class Hitbox : MonoBehaviour
         col = GetComponent<BoxCollider2D>();
         col.isTrigger = true;
     }
-    public void Setup(HitboxData hitboxData)
+    public void Setup(GameObject caster, HitboxData data, int facing)
     {
-        transform.localScale = hitboxData.size;
+        transform.position = caster.transform.position + new Vector3(data.Offset.x * facing, data.Offset.y, 0);
+        transform.localScale = data.Size;
         col.size = Vector2.one;
-        duration = hitboxData.duration;
-        hitData = hitboxData.hitData;
+        duration = data.Duration;
+        hitData = data.HitData;
         timer = 0f;
     }
     void FixedUpdate()

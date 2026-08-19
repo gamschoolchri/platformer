@@ -14,12 +14,12 @@ public class Entity : MonoBehaviour
 
     private Hurtbox hurtboxPrefab;
     private Hurtbox hurtbox;
-    public Vector2 groundCheckSize = new(0.5f, 0.1f);
-    public Vector2 groundCheckOffset = new(0f, 0f);
+    public Vector2 floorCheckSize = new(0.5f, 0.1f);
+    public Vector2 floorCheckOffset = new(0f, 0f);
 
     [field: SerializeField] public int facing { get; private set; }
     [field: SerializeField] public bool isHurtboxActive { get; private set; }
-    [field: SerializeField] public bool isGround { get; private set; }
+    [field: SerializeField] public bool isfloor { get; private set; }
     [field: SerializeField] public bool isMoving { get; private set; }
     [field: SerializeField] public bool isAction { get; private set; }
 
@@ -55,9 +55,9 @@ public class Entity : MonoBehaviour
         Debug.Log(hurtboxPrefab == null);
         if (hurtbox == null) hurtbox = Instantiate(hurtboxPrefab);
 
-        hurtbox.Setup(entityData.hurtboxData);
+        hurtbox.Setup(entityData.HurtboxData);
         hurtbox.transform.SetParent(transform);
-        hurtbox.transform.localPosition = new(entityData.hurtboxData.offset.x * facing, entityData.hurtboxData.offset.y, 0);
+        hurtbox.transform.localPosition = new(entityData.HurtboxData.Offset.x * facing, entityData.HurtboxData.Offset.y, 0);
 
 
         SetHurtboxActive(true);
@@ -71,7 +71,7 @@ public class Entity : MonoBehaviour
             sr.flipX = facing == -1;
         }
         isMoving = rb.linearVelocity.sqrMagnitude > 0.01f;
-        isGround = Physics2D.OverlapBox(transform.position + (Vector3)groundCheckOffset, groundCheckSize, 0f, LayerMask.GetMask("Ground")) != null;
+        isfloor = Physics2D.OverlapBox(transform.position + (Vector3)floorCheckOffset, floorCheckSize, 0f, LayerMask.GetMask("Floor")) != null;
     }
 
 
@@ -91,6 +91,6 @@ public class Entity : MonoBehaviour
         Gizmos.color = Color.cyan;
 
         Gizmos.matrix = transform.localToWorldMatrix;
-        Gizmos.DrawWireCube(groundCheckOffset, groundCheckSize);
+        Gizmos.DrawWireCube(floorCheckOffset, floorCheckSize);
     }
 }

@@ -133,9 +133,9 @@ GameObject:
   - component: {fileID: 288706589}
   - component: {fileID: 288706591}
   - component: {fileID: 288706588}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: daegun_ingame
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -259,10 +259,10 @@ BoxCollider2D:
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 8
   m_ForceReceiveLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 8
   m_ContactCaptureLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -325,11 +325,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Entity
   fileName: Entity_001
-  groundCheckSize: {x: 0.5, y: 0.1}
-  groundCheckOffset: {x: 0, y: 0}
+  floorCheckSize: {x: 0.5, y: 0.1}
+  floorCheckOffset: {x: 0, y: 0}
   <facing>k__BackingField: 0
   <isHurtboxActive>k__BackingField: 0
-  <isGround>k__BackingField: 0
+  <isfloor>k__BackingField: 0
   <isMoving>k__BackingField: 0
   <isAction>k__BackingField: 0
 --- !u!1 &713691718
@@ -622,7 +622,7 @@ GameObject:
   - component: {fileID: 2092413889}
   - component: {fileID: 2092413894}
   - component: {fileID: 2092413895}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Entity_001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -642,11 +642,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   fileName: Entity_001
-  groundCheckSize: {x: 0.5, y: 0.1}
-  groundCheckOffset: {x: 0, y: 0}
+  floorCheckSize: {x: 0.5, y: 0.1}
+  floorCheckOffset: {x: 0, y: 0}
   <facing>k__BackingField: 0
   <isHurtboxActive>k__BackingField: 0
-  <isGround>k__BackingField: 0
+  <isfloor>k__BackingField: 0
   <isMoving>k__BackingField: 0
   <isAction>k__BackingField: 0
 --- !u!4 &2092413890
@@ -690,7 +690,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!212 &2092413892
 SpriteRenderer:
   serializedVersion: 2
@@ -770,10 +770,10 @@ BoxCollider2D:
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 8
   m_ForceReceiveLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 8
   m_ContactCaptureLayers:
     serializedVersion: 2
     m_Bits: 4294967295
