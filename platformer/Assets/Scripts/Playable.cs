@@ -80,7 +80,7 @@ public class Playable : MonoBehaviour
         commands.Player.Skills.started += ctx =>
         {
             int skillIndex = (int)ctx.ReadValue<float>() - 1;
-            SkillManager.Instance.SpawnSkill(gameObject, "Skill_001", ent.facing);
+            SpawnManager.Instance.SpawnSkill(gameObject, "Skill_001", ent.Facing);
         };
 
         commands.Enable();
@@ -104,7 +104,7 @@ public class Playable : MonoBehaviour
         {
             if (timers["roll"] > rollDuration * 0.5f)
             {
-                MoveDirectionX = ent.facing * rollSpeedX;
+                MoveDirectionX = ent.Facing * rollSpeedX;
                 accelRate = acceleration;
             }
             else
@@ -125,7 +125,7 @@ public class Playable : MonoBehaviour
 
 
 
-        if (ent.isfloor)
+        if (ent.IsOnFloor)
         {
             isAirRolled = false;
         }
@@ -154,10 +154,10 @@ public class Playable : MonoBehaviour
             case ActionType.roll:
                 if (CanDoAction(ActionType.roll))
                 {
-                    if (!ent.isfloor)
+                    if (!ent.IsOnFloor)
                     {
                         currVelocity.y = rollSpeedY;
-                        currVelocity.x += ent.facing * rollDX / 5;
+                        currVelocity.x += ent.Facing * rollDX / 5;
                         isAirRolled = true;
                     }
 
@@ -196,18 +196,18 @@ public class Playable : MonoBehaviour
     }
     private bool CanDoAction(ActionType action)
     {
-        if (ent.isAction) return false;
+        if (ent.IsAction) return false;
 
         if (action == ActionType.jump)
         {
-            if (ent.isfloor) return true;
+            if (ent.IsOnFloor) return true;
             return false;
         }
         if (action == ActionType.roll)
         {
             if (timers["Cooldown_roll"] == 0f)
             {
-                if (ent.isfloor || !isAirRolled) return true;
+                if (ent.IsOnFloor || !isAirRolled) return true;
             }
             return false;
         }

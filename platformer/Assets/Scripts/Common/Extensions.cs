@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class Extensions
@@ -5,7 +6,7 @@ public static class Extensions
     public static GameObject FindClosestTarget(this Transform transform, float radius, string targetTag = null, LayerMask layerMask = default)
     {
         int mask = (layerMask.value == 0) ? ~0 : layerMask.value;
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius, mask);
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, radius, mask);
 
         GameObject closestTarget = null;
         float minDistance = float.MaxValue;
@@ -13,9 +14,10 @@ public static class Extensions
 
         foreach (var col in hitColliders)
         {
+            if (col.transform == transform) continue;
             if (!hasTag || col.CompareTag(targetTag))
             {
-                float distance = Vector3.Distance(transform.position, col.transform.position);
+                float distance = (col.transform.position - transform.position).sqrMagnitude;
                 if (distance < minDistance)
                 {
                     minDistance = distance;
@@ -25,5 +27,23 @@ public static class Extensions
         }
 
         return closestTarget;
+    }
+
+    public static bool NullCheck<T>(this T target, string name)
+    {
+        if (target is Object unityObj)
+        {
+            if (unityObj == null)
+            {
+                Debug.LogError($"[{name}] {typeof(T).Name} (UnityObject) is null or destroyed");
+                return true;
+            }
+        }
+        else if (EqualityComparer<T>.Default.Equals(target, default))
+        {
+            Debug.LogError($"[{name}] {typeof(T).Name} is null or default");
+            return true;
+        }
+        return false;
     }
 }

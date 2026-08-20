@@ -5,8 +5,6 @@ public class Hitbox : MonoBehaviour
 {
     private BoxCollider2D col;
     private HitData hitData;
-    private float duration;
-    private float timer;
     void Awake()
     {
         col = GetComponent<BoxCollider2D>();
@@ -17,17 +15,11 @@ public class Hitbox : MonoBehaviour
         transform.position = caster.transform.position + new Vector3(data.Offset.x * facing, data.Offset.y, 0);
         transform.localScale = data.Size;
         col.size = Vector2.one;
-        duration = data.Duration;
         hitData = data.HitData;
-        timer = 0f;
-    }
-    void FixedUpdate()
-    {
-        timer += Time.fixedDeltaTime;
-        if (timer > duration) gameObject.SetActive(false);
+        CoroutineManager.Instance.ActiveToggle(gameObject, 0f, data.Duration);
     }
 
-    void OTriggerEnter2D(Collider2D collision)
+    private void OTriggerEnter2D(Collider2D collision)
     {
         Hurtbox hurtbox = collision.GetComponent<Hurtbox>();
         if (hurtbox != null)

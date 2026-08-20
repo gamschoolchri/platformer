@@ -19,7 +19,7 @@ public class SkillData : ScriptableObject
 
     [Header("모듈 목록")]
     [SerializeReference, SubclassSelector]
-    private List<SkillModule> modules = new List<SkillModule>();
+    private List<SkillModule> modules = new();
 
     public IReadOnlyList<SkillModule> Modules => modules;
 }

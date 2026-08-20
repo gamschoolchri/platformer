@@ -8,13 +8,13 @@ public abstract class SkillModule
 {
     protected GameObject caster;
 
+    public virtual SkillModule Clone()
+    {
+        return (SkillModule)MemberwiseClone();
+    }
     public virtual void Setup(GameObject caster, int facing)
     {
-        if (caster == null)
-        {
-            Debug.LogError($"[{GetType().Name}] caster is null");
-            return;
-        }
+        if (caster.NullCheck(GetType().Name)) return;
         this.caster = caster;
     }
 }
@@ -22,7 +22,11 @@ public abstract class SkillModule
 [Serializable]
 public abstract class MoveModule : SkillModule
 {
-    public abstract void FixedUpdate();
+    protected Vector2 velocity;
+    public virtual void FixedUpdate()
+    {
+        caster.transform.Translate(velocity * Time.fixedDeltaTime);
+    }
 }
 
 [Serializable]
@@ -33,7 +37,6 @@ public class HomingModule : MoveModule
     public LayerMask targetLayerMask = default;
     public string targetTag = null;
 
-    private Vector2 velocity;
     private GameObject target;
 
     public override void Setup(GameObject caster, int facing)
@@ -42,7 +45,6 @@ public class HomingModule : MoveModule
         if (this.caster == null) return;
 
         target = this.caster.transform.FindClosestTarget(detectRadius, targetTag, targetLayerMask);
-
 
         if (target != null)
         {
@@ -56,13 +58,12 @@ public class HomingModule : MoveModule
 
         if (target == null)
         {
-            target = this.caster.transform.FindClosestTarget(detectRadius, targetTag, targetLayerMask);
+            target = caster.transform.FindClosestTarget(detectRadius, targetTag, targetLayerMask);
             if (target == null) return;
         }
 
         velocity = (target.transform.position - caster.transform.position).normalized * speed;
-
-        // 예: caster.transform.Translate(velocity * Time.fixedDeltaTime);
+        base.FixedUpdate();
     }
 }
 
@@ -71,18 +72,17 @@ public class EffectModule : SkillModule
 {
     public Effect prefab;
     public EffectData effectData;
+    [SerializeField, HideInInspector] private Effect effect;
 
     public override void Setup(GameObject caster, int facing)
     {
         base.Setup(caster, facing);
         if (this.caster == null) return;
-
-        if (prefab == null)
+        if (effect == null)
         {
-            Debug.LogError($"[{GetType().Name}] prefab is null");
-            return;
+            if (prefab.NullCheck(GetType().Name)) return;
+            effect = UnityEngine.Object.Instantiate(prefab, this.caster.transform);
         }
-        Effect effect = UnityEngine.Object.Instantiate(prefab, this.caster.transform);
 
         effect.Setup(effectData, facing);
     }

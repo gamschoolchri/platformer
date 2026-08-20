@@ -1,9 +1,11 @@
 using UnityEngine;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 public class Skill : MonoBehaviour
 {
     [SerializeField] private SkillData data;
-    public SkillData skillData => data;
+    public SkillData SkillData => data;
+    private readonly List<SkillModule> modules = new();
 
     public void Setup(GameObject caster, int facing)
     {
@@ -11,13 +13,14 @@ public class Skill : MonoBehaviour
         CoroutineManager.Instance.ActiveToggle(gameObject, 0f, data.Duration);
         foreach (SkillModule module in data.Modules)
         {
-            Debug.Log(module.GetType().Name);
-            module.Setup(gameObject, facing);
+            SkillModule moduleCopy = module.Clone();
+            modules.Add(moduleCopy);
+            moduleCopy.Setup(gameObject, facing);
         }
     }
     private void FixedUpdate()
     {
-        foreach (SkillModule module in data.Modules)
+        foreach (SkillModule module in modules)
         {
             if (module is MoveModule moveModule)
             {

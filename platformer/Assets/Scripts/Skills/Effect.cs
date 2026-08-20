@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class Effect : MonoBehaviour
 {
-    private EffectData effectData;
+    private EffectData data;
     private int facing;
     public void Setup(EffectData data, int facing)
     {
+        if (data.NullCheck(GetType().Name)) return;
         this.facing = facing;
-        effectData = data;
-        transform.localScale = (Vector3)effectData.Size;
-        CoroutineManager.Instance.ActiveToggle(gameObject, effectData.Startup, effectData.Duration);
-        MakeHitbox(0);
+        this.data = data;
+        transform.localScale = (Vector3)this.data.Size;
+        CoroutineManager.Instance.ActiveToggle(gameObject, this.data.Startup, this.data.Duration);
     }
     public void MakeHitbox(int index)
     {
-        SkillManager.Instance.SpawnHitbox(gameObject, effectData.Hitboxes[index], facing);
+        SpawnManager.Instance.SpawnHitbox(gameObject, data.Hitboxes[index], facing);
     }
 }

@@ -1,26 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SkillManager : MonoBehaviour
+public class SpawnManager : MonoBehaviour
 {
-    private static SkillManager instance;
+    private static SpawnManager instance;
     private Dictionary<string, List<Skill>> skillPool = new();
     private List<Hitbox> hitboxPool = new();
     private Transform Container;
     private static readonly GameObject manager;
 
-    public static SkillManager Instance
+    public static SpawnManager Instance
     {
         get
         {
             if (instance == null)
             {
-                instance = Object.FindAnyObjectByType<SkillManager>();
+                instance = Object.FindAnyObjectByType<SpawnManager>();
 
                 if (instance == null)
                 {
-                    GameObject manager = new("(System) SkillManager");
-                    instance = manager.AddComponent<SkillManager>();
+                    GameObject manager = new("(System) SpawnManager");
+                    instance = manager.AddComponent<SpawnManager>();
                     DontDestroyOnLoad(manager);
 
                     GameObject container = new("Container");
@@ -80,11 +80,7 @@ public class SkillManager : MonoBehaviour
         {
             Skill prefab = Resources.Load<Skill>($"Skills/Prefabs/{skillID}");
 
-            if (prefab == null)
-            {
-                Debug.LogError($"[SkillManager] '{skillID}' prefab is null");
-                return;
-            }
+            if (prefab.NullCheck($"{GetType().Name},{skillID}")) return;
 
             skill = Instantiate(prefab, Container);
             skillPool[skillID].Add(skill);
@@ -105,14 +101,20 @@ public class SkillManager : MonoBehaviour
 
     public void Clear()
     {
-        foreach (var skillPoolList in skillPool.Values)
+        foreach (var skillList in skillPool.Values)
         {
-            foreach (var skill in skillPoolList)
+            foreach (var skill in skillList)
             {
                 if (skill != null) Destroy(skill.gameObject);
             }
         }
         skillPool.Clear();
+        foreach (var hitbox in hitboxPool)
+        {
+            if (hitbox != null) Destroy(hitbox.gameObject);
+        }
+        hitboxPool.Clear();
         Resources.UnloadUnusedAssets();
+        Debug.Log($"[{GetType().Name}] Pool Clear Finished");
     }
 }

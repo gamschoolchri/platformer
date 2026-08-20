@@ -324,14 +324,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38ff89af1a2f096438121384d6eb92b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Entity
-  fileName: Entity_001
+  data: {fileID: 11400000, guid: e4d60d48b7798d64190f77221030c2e7, type: 2}
   floorCheckSize: {x: 0.5, y: 0.1}
   floorCheckOffset: {x: 0, y: 0}
-  <facing>k__BackingField: 0
-  <isHurtboxActive>k__BackingField: 0
-  <isfloor>k__BackingField: 0
-  <isMoving>k__BackingField: 0
-  <isAction>k__BackingField: 0
+  facing: 1
+  isHurtboxActive: 0
+  isOnFloor: 0
+  isMoving: 0
+  isAction: 0
 --- !u!1 &713691718
 GameObject:
   m_ObjectHideFlags: 0
@@ -621,7 +621,6 @@ GameObject:
   - component: {fileID: 2092413893}
   - component: {fileID: 2092413889}
   - component: {fileID: 2092413894}
-  - component: {fileID: 2092413895}
   m_Layer: 8
   m_Name: Entity_001
   m_TagString: Untagged
@@ -641,14 +640,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38ff89af1a2f096438121384d6eb92b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  fileName: Entity_001
+  data: {fileID: 11400000, guid: e4d60d48b7798d64190f77221030c2e7, type: 2}
   floorCheckSize: {x: 0.5, y: 0.1}
   floorCheckOffset: {x: 0, y: 0}
-  <facing>k__BackingField: 0
-  <isHurtboxActive>k__BackingField: 0
-  <isfloor>k__BackingField: 0
-  <isMoving>k__BackingField: 0
-  <isAction>k__BackingField: 0
+  facing: 1
+  isHurtboxActive: 0
+  isOnFloor: 0
+  isMoving: 0
+  isAction: 0
 --- !u!4 &2092413890
 Transform:
   m_ObjectHideFlags: 0
@@ -818,18 +817,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &2092413895
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2092413888}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28b844f4f6d166f46bd15bf0b9e8b53e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

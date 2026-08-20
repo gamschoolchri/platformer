@@ -54,11 +54,7 @@ public class CoroutineManager : MonoBehaviour
 
     public void ActiveToggle(GameObject target, float startup, float duration)
     {
-        if (target == null)
-        {
-            Debug.LogError("[CoroutineManager] target is null");
-            return;
-        }
+        if (target.NullCheck(GetType().Name)) return;
         StartCoroutine(ActiveToggleIEnumerator(target, startup, duration));
     }
     private IEnumerator ActiveToggleIEnumerator(GameObject target, float startup, float duration)
