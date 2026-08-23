@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,7 @@ public class CoroutineManager : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = Object.FindAnyObjectByType<CoroutineManager>();
+                instance = FindAnyObjectByType<CoroutineManager>();
 
                 if (instance == null)
                 {
@@ -52,16 +53,16 @@ public class CoroutineManager : MonoBehaviour
 
 
 
-    public void ActiveToggle(GameObject target, float startup, float duration)
+
+    public void Toggle(Action<bool> Toggle, float startup, float duration)
     {
-        if (target.NullCheck(GetType().Name)) return;
-        StartCoroutine(ActiveToggleIEnumerator(target, startup, duration));
+        StartCoroutine(ToggleIEnumerator(Toggle, startup, duration));
     }
-    private IEnumerator ActiveToggleIEnumerator(GameObject target, float startup, float duration)
+    private IEnumerator ToggleIEnumerator(Action<bool> Toggle, float startup, float duration)
     {
         yield return WaitForSeconds(startup);
-        target.SetActive(true);
+        Toggle.Invoke(true);
         yield return WaitForSeconds(duration);
-        if (target != null) target.SetActive(false);
+        Toggle.Invoke(false);
     }
 }

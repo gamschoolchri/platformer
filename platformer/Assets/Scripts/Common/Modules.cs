@@ -7,15 +7,17 @@ using UnityEngine;
 public abstract class SkillModule
 {
     protected GameObject caster;
+    protected GameObject parent;
 
     public virtual SkillModule Clone()
     {
         return (SkillModule)MemberwiseClone();
     }
-    public virtual void Setup(GameObject caster, int facing)
+    public virtual void Setup(GameObject caster, GameObject parent, int facing)
     {
-        if (caster.NullCheck(GetType().Name)) return;
+        if (caster.NullCheck(nameof(SkillModule))) return;
         this.caster = caster;
+        this.parent = parent;
     }
 }
 
@@ -39,9 +41,9 @@ public class HomingModule : MoveModule
 
     private GameObject target;
 
-    public override void Setup(GameObject caster, int facing)
+    public override void Setup(GameObject caster, GameObject parent, int facing)
     {
-        base.Setup(caster, facing);
+        base.Setup(caster, parent, facing);
         if (this.caster == null) return;
 
         target = this.caster.transform.FindClosestTarget(detectRadius, targetTag, targetLayerMask);
@@ -74,16 +76,43 @@ public class EffectModule : SkillModule
     public EffectData effectData;
     [SerializeField, HideInInspector] private Effect effect;
 
-    public override void Setup(GameObject caster, int facing)
+    public override void Setup(GameObject caster, GameObject parent, int facing)
     {
-        base.Setup(caster, facing);
+        base.Setup(caster, parent, facing);
         if (this.caster == null) return;
         if (effect == null)
         {
-            if (prefab.NullCheck(GetType().Name)) return;
-            effect = UnityEngine.Object.Instantiate(prefab, this.caster.transform);
+            if (prefab.NullCheck(nameof(EffectModule))) return;
+            effect = UnityEngine.Object.Instantiate(prefab, this.parent.transform);
         }
 
-        effect.Setup(effectData, facing);
+        effect.Setup(this.caster, this.parent, effectData, facing);
+    }
+}
+
+[Serializable]
+public abstract class Condition
+{
+    protected Character caster;
+    public virtual Condition Clone()
+    {
+        return (Condition)MemberwiseClone();
+    }
+    public virtual void Setup(Character caster)
+    {
+        this.caster = caster;
+    }
+    public abstract bool CanExecute();
+    public virtual void OnExecute() { }
+
+}
+public class CooldownCondition : Condition
+{
+    private bool cannotExecute;
+
+    public override bool CanExecute() => !cannotExecute;
+    public override void OnExecute()
+    {
+        // CoroutineManager.Instance.Toggle(value => cannotExecute = value, 0f, caster.)
     }
 }

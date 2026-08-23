@@ -20,7 +20,7 @@ public enum MovementType
 }
 
 [System.Serializable]
-public struct HitData
+public struct DefenderHitData
 {
     [SerializeField] private float damage;
     [SerializeField] private float knockback;
@@ -34,17 +34,25 @@ public struct HitData
 }
 
 [System.Serializable]
+public struct AttackerHitData
+{
+
+}
+
+[System.Serializable]
 public struct HitboxData
 {
     [SerializeField] private float duration;
     [SerializeField] private Vector2 size;
     [SerializeField] private Vector2 offset;
-    [SerializeField] private HitData hitData;
+    [SerializeField] private DefenderHitData defenderHitData;
+    [SerializeField] private AttackerHitData attackerHitData;
 
     public readonly float Duration => duration;
     public readonly Vector2 Size => size;
     public readonly Vector2 Offset => offset;
-    public readonly HitData HitData => hitData;
+    public readonly DefenderHitData DefenderHitData => defenderHitData;
+    public readonly AttackerHitData AttackerHitData => attackerHitData;
 }
 
 [System.Serializable]
@@ -75,34 +83,110 @@ public struct EffectData
     public readonly IReadOnlyList<HitboxData> Hitboxes => hitboxes;
 }
 
-// [System.Serializable]
-// public struct EntityData
-// {
-//     [SerializeField] private string entityName;
-//     public readonly string EntityName => entityName;
+[System.Serializable]
+public struct EntityData
+{
+    [SerializeField] private string name;
+    [SerializeField] private float defaultSpeed;
+    [SerializeField] private float speed;
+    [SerializeField] private Vector2 defaultSize;
+    [SerializeField] private Vector2 size;
 
-//     [SerializeField] private Vector2 size;
-//     public readonly Vector2 Size => size;
+    public string Name { readonly get => name; set => name = value; }
+    public readonly float DefaultSpeed => defaultSpeed;
+    public float Speed { readonly get => speed; set => speed = value; }
+    public readonly Vector2 DefaultSize => defaultSize;
+    public Vector2 Size { readonly get => size; set => size = value; }
 
-//     [SerializeField] private int health;
-//     public readonly int Health => health;
+    public EntityData(EntityDataSO so)
+    {
+        name = so.EntityName;
+        defaultSpeed = so.DefaultSpeed;
+        speed = so.DefaultSpeed;
+        defaultSize = so.DefaultSize;
+        size = so.DefaultSize;
+    }
+}
 
-//     [SerializeField] private int energy;
-//     public readonly int Energy => energy;
+[System.Serializable]
+public struct CharacterData
+{
+    [SerializeField] private int maxHealth;
+    [SerializeField] private int health;
+    [SerializeField] private int maxEnergy;
+    [SerializeField] private int energy;
+    [SerializeField] private List<Buff> buffs;
+    [SerializeField] private List<DeBuff> debuffs;
+    [SerializeField] private HurtboxData hurtboxData;
 
-//     [SerializeField] private float moveSpeed;
-//     public readonly float MoveSpeed => moveSpeed;
+    public int MaxHealth { readonly get => maxHealth; set => maxHealth = value; }
+    public int Health { readonly get => health; set => health = Mathf.Clamp(value, 0, maxHealth); }
+    public int MaxEnergy { readonly get => maxEnergy; set => maxEnergy = value; }
+    public int Energy { readonly get => energy; set => energy = Mathf.Clamp(value, 0, maxEnergy); }
+    public List<Buff> Buffs { readonly get => buffs; set => buffs = value; }
+    public List<DeBuff> Debuffs { readonly get => debuffs; set => debuffs = value; }
 
-//     [SerializeField] private Buff[] buffs;
-//     public readonly Buff[] Buffs => buffs;
+    public readonly HurtboxData HurtboxData => hurtboxData;
 
-//     [SerializeField] private DeBuff[] debuffs;
-//     public readonly DeBuff[] Debuffs => debuffs;
+    public CharacterData(CharacterDataSO so)
+    {
+        maxHealth = so.MaxHealth;
+        health = so.MaxHealth;
+        maxEnergy = so.MaxEnergy;
+        energy = so.MaxEnergy;
 
-//     [SerializeField] private HurtboxData hurtboxData;
-//     public readonly HurtboxData HurtboxData => hurtboxData;
-// }
+        buffs = so.Buffs != null ? new(so.Buffs) : new();
+        debuffs = so.Debuffs != null ? new(so.Debuffs) : new();
+        hurtboxData = so.HurtboxData;
+    }
+}
 
+[System.Serializable]
+public struct EnemyData
+{
+    [SerializeField] private List<Skill> skills;
+
+    public List<Skill> Skills { readonly get => skills; set => skills = value; }
+
+
+    public EnemyData(EnemyDataSO so)
+    {
+        skills = so.Skills != null ? new(so.Skills) : new();
+    }
+}
+
+
+[System.Serializable]
+public struct SkillPack
+{
+    [Header("스킬 정보")]
+    [SerializeField] private Skill skill;
+
+    [Header("발동 정책 및 우선순위")]
+    [SerializeField] private int priority;
+    [SerializeField] private bool canInterrupt;
+
+    [Header("엔티티 전용 발동 조건 모듈들")]
+    [SerializeReference, SubclassSelector]
+    private List<Condition> conditions;
+
+    public readonly Skill Skill => skill;
+    public readonly int Priority => priority;
+    public readonly bool CanInterrupt => canInterrupt;
+    public readonly IReadOnlyList<Condition> Conditions => conditions;
+
+    public readonly bool CanExecute(Character caster)
+    {
+        if (skill.NullCheck(nameof(SkillPack))) return false;
+        if (conditions == null) return true;
+
+        foreach (Condition condition in conditions)
+        {
+            if (!condition.CanExecute()) return false;
+        }
+        return true;
+    }
+}
 // [System.Serializable]
 // public struct SkillData
 // {

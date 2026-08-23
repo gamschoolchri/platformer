@@ -1,21 +1,20 @@
 using UnityEngine;
-using Newtonsoft.Json;
-using System;
-using Unity.VisualScripting;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(Collider2D))]
 public class Entity : MonoBehaviour
 {
-    [SerializeField] private EntityData data;
-    public EntityData EntityData => data;
+    [SerializeField] private EntityDataSO so;
+    public EntityDataSO EntityDataSO => so;
+    private EntityData data;
+    public ref EntityData EntityData => ref data;
 
     private Rigidbody2D rb;
     private SpriteRenderer sr;
+    private Collider2D col;
 
-    private Hurtbox hurtbox;
-    public Vector2 floorCheckSize = new(0.5f, 0.1f);
-    public Vector2 floorCheckOffset = new(0f, 0f);
+    private Vector2 floorCheckSize;
 
     [SerializeField] private int facing = 1;
     [SerializeField] private bool isHurtboxActive = false;
@@ -33,22 +32,12 @@ public class Entity : MonoBehaviour
 
     void Awake()
     {
-        data.NullCheck(GetType().Name);
+        so.NullCheck(nameof(Entity));
+        data = new(so);
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-        Setup();
-    }
-
-
-    public void Setup()
-    {
-        if (hurtbox == null) hurtbox = Instantiate(Settings.Instance.defaultHurtbox, transform);
-
-        hurtbox.Setup(data.HurtboxData, facing);
-
-
-
-        SetHurtboxActive(true);
+        col = GetComponent<Collider2D>();
+        floorCheckSize = new(col.bounds.size.x, 0.1f);
     }
 
     void FixedUpdate()
@@ -59,26 +48,31 @@ public class Entity : MonoBehaviour
             sr.flipX = facing == -1;
         }
         isMoving = rb.linearVelocity.sqrMagnitude > 0.01f;
-        isOnFloor = Physics2D.OverlapBox(transform.position + (Vector3)floorCheckOffset, floorCheckSize, 0f, LayerMask.GetMask("Floor")) != null;
+        isOnFloor = CheckOnFloor();
     }
 
-
-
-
-
-    public void SetHurtboxActive(bool isActive)
+    public void Move(Vector2 direction)
     {
-        hurtbox.gameObject.SetActive(isActive);
-        isHurtboxActive = isActive;
+        rb.linearVelocity = direction * data.Speed;
     }
 
-
+    private bool CheckOnFloor()
+    {
+        if (sr == null || sr.sprite.NullCheck(nameof(Entity))) return false;
+        return Physics2D.OverlapBox(transform.position, floorCheckSize, 0f, LayerMask.GetMask("Floor")) != null;
+    }
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.cyan;
+        Gizmos.matrix = Matrix4x4.identity;
 
-        Gizmos.matrix = transform.localToWorldMatrix;
-        Gizmos.DrawWireCube(floorCheckOffset, floorCheckSize);
+        if (col == null) col = GetComponent<Collider2D>();
+
+        Vector2 size = (col != null)
+            ? new Vector2(col.bounds.size.x, 0.1f)
+            : Vector2.zero;
+
+        Gizmos.DrawWireCube(transform.position, size);
     }
 }

@@ -3,19 +3,19 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 public class Skill : MonoBehaviour
 {
-    [SerializeField] private SkillData data;
-    public SkillData SkillData => data;
+    [SerializeField] private SkillDataSO data;
+    public SkillDataSO SkillDataSO => data;
     private readonly List<SkillModule> modules = new();
 
     public void Setup(GameObject caster, int facing)
     {
         transform.position = caster.transform.position + new Vector3(data.Offset.x * facing, data.Offset.y, 0);
-        CoroutineManager.Instance.ActiveToggle(gameObject, 0f, data.Duration);
+        CoroutineManager.Instance.Toggle(value => gameObject.SetActive(value), 0f, data.Duration);
         foreach (SkillModule module in data.Modules)
         {
             SkillModule moduleCopy = module.Clone();
             modules.Add(moduleCopy);
-            moduleCopy.Setup(gameObject, facing);
+            moduleCopy.Setup(caster, gameObject, facing);
         }
     }
     private void FixedUpdate()

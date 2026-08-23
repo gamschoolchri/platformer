@@ -208,7 +208,7 @@ Transform:
   m_GameObject: {fileID: 288706585}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.573, y: 3.077, z: 0}
+  m_LocalPosition: {x: 3, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -325,8 +325,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Entity
   data: {fileID: 11400000, guid: e4d60d48b7798d64190f77221030c2e7, type: 2}
-  floorCheckSize: {x: 0.5, y: 0.1}
-  floorCheckOffset: {x: 0, y: 0}
   facing: 1
   isHurtboxActive: 0
   isOnFloor: 0
@@ -641,8 +639,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   data: {fileID: 11400000, guid: e4d60d48b7798d64190f77221030c2e7, type: 2}
-  floorCheckSize: {x: 0.5, y: 0.1}
-  floorCheckOffset: {x: 0, y: 0}
   facing: 1
   isHurtboxActive: 0
   isOnFloor: 0
@@ -793,7 +789,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.5, y: 2.75}
+  m_Size: {x: 1, y: 2.7}
   m_EdgeRadius: 0
 --- !u!95 &2092413894
 Animator:

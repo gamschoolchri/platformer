@@ -4,9 +4,12 @@ using UnityEngine;
 public class Hurtbox : MonoBehaviour
 {
     private BoxCollider2D col;
+    private Character ownerCharacter;
+    public Character OwnerCharacter => ownerCharacter;
     void Awake()
     {
         col = GetComponent<BoxCollider2D>();
+        ownerCharacter = transform.parent.GetComponent<Character>();
         col.isTrigger = true;
     }
     public void Setup(HurtboxData hurtboxData, int facing)
@@ -17,8 +20,9 @@ public class Hurtbox : MonoBehaviour
     }
 
 
-    public void OnHit(HitData hitdata)
+    public void OnHit(DefenderHitData defenderHitData)
     {
+        ownerCharacter.OnDamage(defenderHitData);
         return;
     }
 

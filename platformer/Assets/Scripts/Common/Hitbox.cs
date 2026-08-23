@@ -4,27 +4,31 @@ using UnityEngine;
 public class Hitbox : MonoBehaviour
 {
     private BoxCollider2D col;
-    private HitData hitData;
+    private GameObject caster;
+    private DefenderHitData defenderHitData;
+    private AttackerHitData attackerHitData;
     void Awake()
     {
         col = GetComponent<BoxCollider2D>();
         col.isTrigger = true;
     }
-    public void Setup(GameObject caster, HitboxData data, int facing)
+    public void Setup(GameObject caster, GameObject skillObject, HitboxData data, int facing)
     {
-        transform.position = caster.transform.position + new Vector3(data.Offset.x * facing, data.Offset.y, 0);
+        this.caster = caster;
+        transform.position = skillObject.transform.position + new Vector3(data.Offset.x * facing, data.Offset.y, 0);
         transform.localScale = data.Size;
         col.size = Vector2.one;
-        hitData = data.HitData;
-        CoroutineManager.Instance.ActiveToggle(gameObject, 0f, data.Duration);
+        defenderHitData = data.DefenderHitData;
+        attackerHitData = data.AttackerHitData;
+        CoroutineManager.Instance.Toggle(value => gameObject.SetActive(value), 0f, data.Duration);
     }
 
-    private void OTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        Hurtbox hurtbox = collision.GetComponent<Hurtbox>();
-        if (hurtbox != null)
+        if (collision.TryGetComponent(out Hurtbox hurtbox))
         {
-            hurtbox.OnHit(hitData);
+            if (caster.TryGetComponent(out Character casterCharacter)) casterCharacter.OnAttack(attackerHitData);
+            hurtbox.OnHit(defenderHitData);
         }
     }
 

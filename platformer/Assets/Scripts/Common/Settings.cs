@@ -3,7 +3,19 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Settings", menuName = "Scriptable Objects/Settings")]
 public class Settings : ScriptableObject
 {
-    public static Settings Instance { get; private set; }
+    private static Settings instance;
+    public static Settings Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = Resources.Load<Settings>("Common/Data/Settings");
+                instance.NullCheck("Settings");
+            }
+            return instance;
+        }
+    }
 
     [Header("프리팹 설정")]
     public Hitbox defaultHitbox;
@@ -14,8 +26,4 @@ public class Settings : ScriptableObject
     public LayerMask enemyLayer;
     public LayerMask playerLayer;
 
-    private void OnEnable()
-    {
-        Instance = this;
-    }
 }

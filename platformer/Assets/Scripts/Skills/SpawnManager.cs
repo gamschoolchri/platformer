@@ -4,10 +4,9 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     private static SpawnManager instance;
-    private Dictionary<string, List<Skill>> skillPool = new();
-    private List<Hitbox> hitboxPool = new();
+    private readonly Dictionary<string, List<Skill>> skillPool = new();
+    private readonly List<Hitbox> hitboxPool = new();
     private Transform Container;
-    private static readonly GameObject manager;
 
     public static SpawnManager Instance
     {
@@ -15,7 +14,7 @@ public class SpawnManager : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = Object.FindAnyObjectByType<SpawnManager>();
+                instance = FindAnyObjectByType<SpawnManager>();
 
                 if (instance == null)
                 {
@@ -27,39 +26,16 @@ public class SpawnManager : MonoBehaviour
                     container.transform.SetParent(manager.transform);
                     instance.Container = container.transform;
                 }
-                else
-                {
-                    instance.ResetOnReload();
-                }
             }
             return instance;
-        }
-    }
-    private void ResetOnReload()
-    {
-        skillPool ??= new Dictionary<string, List<Skill>>();
-        skillPool.Clear();
-
-        Transform containerTransform = transform.Find("Container");
-        if (containerTransform != null)
-        {
-            foreach (Transform child in containerTransform)
-            {
-                if (child != null) Destroy(child.gameObject);
-            }
-            Container = containerTransform;
-        }
-        else
-        {
-            GameObject container = new("Container");
-            container.transform.SetParent(transform);
-            Container = container.transform;
         }
     }
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     private static void ResetStaticVariables()
     {
+        if (instance != null)
+            instance.Clear();
         instance = null;
     }
 
@@ -80,7 +56,7 @@ public class SpawnManager : MonoBehaviour
         {
             Skill prefab = Resources.Load<Skill>($"Skills/Prefabs/{skillID}");
 
-            if (prefab.NullCheck($"{GetType().Name},{skillID}")) return;
+            if (prefab.NullCheck($"{nameof(SpawnManager)},{skillID}")) return;
 
             skill = Instantiate(prefab, Container);
             skillPool[skillID].Add(skill);
@@ -88,15 +64,15 @@ public class SpawnManager : MonoBehaviour
         skill.Setup(caster, facing);
 
     }
-    public void SpawnHitbox(GameObject caster, HitboxData data, int facing)
+    public void SpawnHitbox(GameObject caster, GameObject skillObject, HitboxData data, int facing)
     {
         Hitbox hitbox = hitboxPool.Find(x => !x.gameObject.activeInHierarchy);
         if (hitbox == null)
         {
-            hitbox = Instantiate(Settings.Instance.defaultHitbox);
+            hitbox = Instantiate(Settings.Instance.defaultHitbox, Container);
             hitboxPool.Add(hitbox);
         }
-        hitbox.Setup(caster, data, facing);
+        hitbox.Setup(caster, skillObject, data, facing);
     }
 
     public void Clear()
@@ -115,6 +91,6 @@ public class SpawnManager : MonoBehaviour
         }
         hitboxPool.Clear();
         Resources.UnloadUnusedAssets();
-        Debug.Log($"[{GetType().Name}] Pool Clear Finished");
+        Debug.Log($"[{nameof(SpawnManager)}] Pool Clear Finished");
     }
 }
