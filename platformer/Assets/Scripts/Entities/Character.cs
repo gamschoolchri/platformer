@@ -23,7 +23,7 @@ public class Character : MonoBehaviour
 
         so = ent.EntityDataSO as CharacterDataSO;
         so.NullCheck(nameof(Character));
-        data = new(so);
+        data = new(this, so);
         Setup(); //soon delete
 
     }
@@ -39,7 +39,7 @@ public class Character : MonoBehaviour
     private void Setup()
     {
         if (hurtbox == null) hurtbox = Instantiate(Settings.Instance.defaultHurtbox, transform);
-        hurtbox.Setup(data.HurtboxData, ent.Facing);
+        hurtbox.Setup(data.HurtboxData);
         SetHurtboxActive(true);
     }
 

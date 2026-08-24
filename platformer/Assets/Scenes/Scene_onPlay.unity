@@ -324,8 +324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38ff89af1a2f096438121384d6eb92b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Entity
-  data: {fileID: 11400000, guid: e4d60d48b7798d64190f77221030c2e7, type: 2}
-  facing: 1
+  so: {fileID: 11400000, guid: 3985848c315e08748980c74bf58d6801, type: 2}
   isHurtboxActive: 0
   isOnFloor: 0
   isMoving: 0
@@ -638,8 +637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38ff89af1a2f096438121384d6eb92b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  data: {fileID: 11400000, guid: e4d60d48b7798d64190f77221030c2e7, type: 2}
-  facing: 1
+  so: {fileID: 11400000, guid: 3985848c315e08748980c74bf58d6801, type: 2}
   isHurtboxActive: 0
   isOnFloor: 0
   isMoving: 0

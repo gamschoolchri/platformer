@@ -4,25 +4,27 @@ using UnityEngine;
 public class Hurtbox : MonoBehaviour
 {
     private BoxCollider2D col;
-    private Character ownerCharacter;
-    public Character OwnerCharacter => ownerCharacter;
+    private Character casterCharacter;
+    private GameObject caster;
+    public Character OwnerCharacter => casterCharacter;
     void Awake()
     {
         col = GetComponent<BoxCollider2D>();
-        ownerCharacter = transform.parent.GetComponent<Character>();
+        caster = transform.parent.gameObject;
+        casterCharacter = caster.GetComponent<Character>();
         col.isTrigger = true;
     }
-    public void Setup(HurtboxData hurtboxData, int facing)
+    public void Setup(HurtboxData hurtboxData)
     {
         transform.localScale = hurtboxData.Size;
-        transform.localPosition = new(hurtboxData.Offset.x * facing, hurtboxData.Offset.y, 0);
+        transform.localPosition = new(hurtboxData.Offset.x * caster.Facing(), hurtboxData.Offset.y, 0);
         col.size = Vector2.one;
     }
 
 
     public void OnHit(DefenderHitData defenderHitData)
     {
-        ownerCharacter.OnDamage(defenderHitData);
+        casterCharacter.OnDamage(defenderHitData);
         return;
     }
 

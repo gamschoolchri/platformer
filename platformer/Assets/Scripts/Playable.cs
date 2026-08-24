@@ -80,7 +80,7 @@ public class Playable : MonoBehaviour
         commands.Player.Skills.started += ctx =>
         {
             int skillIndex = (int)ctx.ReadValue<float>() - 1;
-            SpawnManager.Instance.SpawnSkill(gameObject, "Skill_001", ent.Facing);
+            SpawnManager.Instance.SpawnSkill(gameObject, "Skill_001");
         };
 
         commands.Enable();
@@ -104,7 +104,7 @@ public class Playable : MonoBehaviour
         {
             if (timers["roll"] > rollDuration * 0.5f)
             {
-                MoveDirectionX = ent.Facing * rollSpeedX;
+                MoveDirectionX = gameObject.Facing() * rollSpeedX;
                 accelRate = acceleration;
             }
             else
@@ -157,7 +157,7 @@ public class Playable : MonoBehaviour
                     if (!ent.IsOnFloor)
                     {
                         currVelocity.y = rollSpeedY;
-                        currVelocity.x += ent.Facing * rollDX / 5;
+                        currVelocity.x += gameObject.Facing() * rollDX / 5;
                         isAirRolled = true;
                     }
 

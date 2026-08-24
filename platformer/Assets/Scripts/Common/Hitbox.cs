@@ -12,10 +12,10 @@ public class Hitbox : MonoBehaviour
         col = GetComponent<BoxCollider2D>();
         col.isTrigger = true;
     }
-    public void Setup(GameObject caster, GameObject skillObject, HitboxData data, int facing)
+    public void Setup(GameObject caster, GameObject skillObject, HitboxData data)
     {
         this.caster = caster;
-        transform.position = skillObject.transform.position + new Vector3(data.Offset.x * facing, data.Offset.y, 0);
+        transform.position = skillObject.transform.position + new Vector3(data.Offset.x * caster.Facing(), data.Offset.y, 0);
         transform.localScale = data.Size;
         col.size = Vector2.one;
         defenderHitData = data.DefenderHitData;

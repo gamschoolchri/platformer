@@ -13,7 +13,7 @@ public abstract class SkillModule
     {
         return (SkillModule)MemberwiseClone();
     }
-    public virtual void Setup(GameObject caster, GameObject parent, int facing)
+    public virtual void Setup(GameObject caster, GameObject parent)
     {
         if (caster.NullCheck(nameof(SkillModule))) return;
         this.caster = caster;
@@ -25,6 +25,7 @@ public abstract class SkillModule
 public abstract class MoveModule : SkillModule
 {
     protected Vector2 velocity;
+    public Vector2 Velocity => velocity;
     public virtual void FixedUpdate()
     {
         caster.transform.Translate(velocity * Time.fixedDeltaTime);
@@ -34,16 +35,22 @@ public abstract class MoveModule : SkillModule
 [Serializable]
 public class HomingModule : MoveModule
 {
-    public float detectRadius = 1f;
-    public float speed = 1f;
-    public LayerMask targetLayerMask = default;
-    public string targetTag = null;
+    private float detectRadius = 1f;
+    private float speed = 1f;
+    private LayerMask targetLayerMask = default;
+    private string targetTag = null;
 
     private GameObject target;
 
-    public override void Setup(GameObject caster, GameObject parent, int facing)
+    public float DetectRadius => detectRadius;
+    public float Speed => speed;
+    public LayerMask TargetLayerMask => targetLayerMask;
+    public string TargetTag => targetTag;
+    public GameObject Target => target;
+
+    public override void Setup(GameObject caster, GameObject parent)
     {
-        base.Setup(caster, parent, facing);
+        base.Setup(caster, parent);
         if (this.caster == null) return;
 
         target = this.caster.transform.FindClosestTarget(detectRadius, targetTag, targetLayerMask);
@@ -72,13 +79,23 @@ public class HomingModule : MoveModule
 [Serializable]
 public class EffectModule : SkillModule
 {
-    public Effect prefab;
-    public EffectData effectData;
-    [SerializeField, HideInInspector] private Effect effect;
+    [SerializeField] private Effect prefab;
+    [SerializeField] private EffectData effectData;
 
-    public override void Setup(GameObject caster, GameObject parent, int facing)
+    public Effect Prefab => prefab;
+    public EffectData EffectData => effectData;
+    [SerializeField, HideInInspector] private Effect effect;
+    public Effect Effect => effect;
+
+    public override SkillModule Clone()
     {
-        base.Setup(caster, parent, facing);
+        EffectModule clone = (EffectModule)base.Clone();
+        clone.effectData = clone.effectData.Clone();
+        return clone;
+    }
+    public override void Setup(GameObject caster, GameObject parent)
+    {
+        base.Setup(caster, parent);
         if (this.caster == null) return;
         if (effect == null)
         {
@@ -86,33 +103,35 @@ public class EffectModule : SkillModule
             effect = UnityEngine.Object.Instantiate(prefab, this.parent.transform);
         }
 
-        effect.Setup(this.caster, this.parent, effectData, facing);
+        effect.Setup(this.caster, this.parent, effectData);
     }
 }
 
 [Serializable]
-public abstract class Condition
+public abstract class SkillCondition
 {
     protected Character caster;
-    public virtual Condition Clone()
+    protected Skill skill;
+    public virtual SkillCondition Clone()
     {
-        return (Condition)MemberwiseClone();
+        return (SkillCondition)MemberwiseClone();
     }
-    public virtual void Setup(Character caster)
+    public virtual void Setup(Character caster, Skill skill)
     {
         this.caster = caster;
+        this.skill = skill;
     }
     public abstract bool CanExecute();
     public virtual void OnExecute() { }
 
 }
-public class CooldownCondition : Condition
+public class CooldownCondition : SkillCondition
 {
     private bool cannotExecute;
 
     public override bool CanExecute() => !cannotExecute;
     public override void OnExecute()
     {
-        // CoroutineManager.Instance.Toggle(value => cannotExecute = value, 0f, caster.)
+        CoroutineManager.Instance.Toggle(value => cannotExecute = value, 0f, skill.SkillData.Cooldown);
     }
 }

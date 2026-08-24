@@ -44,4 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc5dbcdb2ed2ca24685decd42cb03ec6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Skill
-  data: {fileID: 11400000, guid: 1d43e812a51132c4ca9bb057623a320e, type: 2}
+  so: {fileID: 11400000, guid: 1d43e812a51132c4ca9bb057623a320e, type: 2}

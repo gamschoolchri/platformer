@@ -46,15 +46,19 @@ public class CharacterDataSO : EntityDataSO
     [Header("세부 정보")]
     [SerializeField] private int maxHealth;
     [SerializeField] private int maxEnergy;
+    [SerializeField] private HurtboxData hurtboxData;
     [SerializeField] private List<Buff> buffs;
     [SerializeField] private List<DeBuff> debuffs;
-    [SerializeField] private HurtboxData hurtboxData;
+
+    [Header("스킬 목록")]
+    [SerializeField] private List<SkillPack> skillPacks;
 
     public int MaxHealth => maxHealth;
     public int MaxEnergy => maxEnergy;
+    public HurtboxData HurtboxData => hurtboxData;
     public IReadOnlyList<Buff> Buffs => buffs;
     public IReadOnlyList<DeBuff> Debuffs => debuffs;
-    public HurtboxData HurtboxData => hurtboxData;
+    public IReadOnlyList<SkillPack> SkillPacks => skillPacks;
 
 }
 
@@ -62,9 +66,5 @@ public class CharacterDataSO : EntityDataSO
 public class EnemyDataSO : CharacterDataSO
 {
 
-    [Header("스킬 목록")]
-    [SerializeField]
-    private List<Skill> skills = new();
 
-    public IReadOnlyList<Skill> Skills => skills;
 }

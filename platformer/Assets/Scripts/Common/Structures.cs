@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -68,19 +69,23 @@ public struct HurtboxData
 [System.Serializable]
 public struct EffectData
 {
-    [SerializeField] private string prefabPath;
     [SerializeField] private float startup;
     [SerializeField] private float duration;
     [SerializeField] private Vector2 size;
     [SerializeField] private Vector2 offset;
     [SerializeField] private List<HitboxData> hitboxes;
+    public float Startup { readonly get => startup; set => startup = value; }
+    public float Duration { readonly get => duration; set => duration = value; }
+    public Vector2 Size { readonly get => size; set => size = value; }
+    public Vector2 Offset { readonly get => offset; set => offset = value; }
+    public List<HitboxData> Hitboxes { readonly get => hitboxes; set => hitboxes = value; }
 
-    public readonly string PrefabPath => prefabPath;
-    public readonly float Startup => startup;
-    public readonly float Duration => duration;
-    public readonly Vector2 Size => size;
-    public readonly Vector2 Offset => offset;
-    public readonly IReadOnlyList<HitboxData> Hitboxes => hitboxes;
+    public readonly EffectData Clone()
+    {
+        EffectData clone = this;
+        clone.Hitboxes = new(Hitboxes);
+        return clone;
+    }
 }
 
 [System.Serializable]
@@ -118,6 +123,7 @@ public struct CharacterData
     [SerializeField] private List<Buff> buffs;
     [SerializeField] private List<DeBuff> debuffs;
     [SerializeField] private HurtboxData hurtboxData;
+    [SerializeField] private List<SkillPack> skillPacks;
 
     public int MaxHealth { readonly get => maxHealth; set => maxHealth = value; }
     public int Health { readonly get => health; set => health = Mathf.Clamp(value, 0, maxHealth); }
@@ -125,34 +131,43 @@ public struct CharacterData
     public int Energy { readonly get => energy; set => energy = Mathf.Clamp(value, 0, maxEnergy); }
     public List<Buff> Buffs { readonly get => buffs; set => buffs = value; }
     public List<DeBuff> Debuffs { readonly get => debuffs; set => debuffs = value; }
+    public List<SkillPack> SkillPacks { readonly get => skillPacks; set => skillPacks = value; }
 
     public readonly HurtboxData HurtboxData => hurtboxData;
 
-    public CharacterData(CharacterDataSO so)
+
+
+
+    public CharacterData(Character caster, CharacterDataSO so)
     {
         maxHealth = so.MaxHealth;
         health = so.MaxHealth;
         maxEnergy = so.MaxEnergy;
         energy = so.MaxEnergy;
 
-        buffs = so.Buffs != null ? new(so.Buffs) : new();
-        debuffs = so.Debuffs != null ? new(so.Debuffs) : new();
+        buffs = (so.Buffs != null) ? new(so.Buffs) : new();
+        debuffs = (so.Debuffs != null) ? new(so.Debuffs) : new();
         hurtboxData = so.HurtboxData;
+        skillPacks = new();
+        if (so.SkillPacks != null)
+        {
+            foreach (SkillPack skillPack in so.SkillPacks)
+            {
+                SkillPack skillPackCopy = skillPack.Clone();
+                skillPackCopy.Setup(caster);
+                skillPacks.Add(skillPackCopy);
+            }
+        }
     }
 }
 
 [System.Serializable]
 public struct EnemyData
 {
-    [SerializeField] private List<Skill> skills;
-
-    public List<Skill> Skills { readonly get => skills; set => skills = value; }
 
 
-    public EnemyData(EnemyDataSO so)
-    {
-        skills = so.Skills != null ? new(so.Skills) : new();
-    }
+
+
 }
 
 
@@ -168,35 +183,95 @@ public struct SkillPack
 
     [Header("엔티티 전용 발동 조건 모듈들")]
     [SerializeReference, SubclassSelector]
-    private List<Condition> conditions;
+    private List<SkillCondition> conditions;
 
-    public readonly Skill Skill => skill;
-    public readonly int Priority => priority;
-    public readonly bool CanInterrupt => canInterrupt;
-    public readonly IReadOnlyList<Condition> Conditions => conditions;
+    public Skill Skill { readonly get => skill; set => skill = value; }
+    public int Priority { readonly get => priority; set => priority = value; }
 
-    public readonly bool CanExecute(Character caster)
+    public bool CanInterrupt { readonly get => canInterrupt; set => canInterrupt = value; }
+
+    public List<SkillCondition> Conditions { readonly get => conditions; set => conditions = value; }
+
+
+
+    public readonly SkillPack Clone()
+    {
+        SkillPack clone = this;
+        clone.Conditions = (Conditions != null) ? Conditions.Select(item => item.Clone()).ToList() : new();
+        return clone;
+    }
+
+    public readonly void Setup(Character caster)
+    {
+        if (conditions != null)
+        {
+            foreach (SkillCondition condition in conditions)
+            {
+                condition.Setup(caster, skill);
+            }
+        }
+    }
+
+    public readonly bool CanExecute()
     {
         if (skill.NullCheck(nameof(SkillPack))) return false;
         if (conditions == null) return true;
 
-        foreach (Condition condition in conditions)
+        foreach (SkillCondition condition in conditions)
         {
             if (!condition.CanExecute()) return false;
         }
         return true;
     }
 }
-// [System.Serializable]
-// public struct SkillData
-// {
-//     public string skillName;
-//     public string animationTrigger;
-//     public float coolDown;
-//     public float duration;
-//     public int useEnergy;
+[System.Serializable]
+public struct SkillData
+{
+    [Header("기본 정보")]
+    [SerializeField] private string name;
+    [SerializeField] private float cooldown;
+    [SerializeField] private float duration;
+    [SerializeField] private int useEnergy;
+    [SerializeField] private Vector2 offset;
 
-//     public MovementType movementType;
-//     public HitboxData hitboxData;
-//     public EffectData effectData;
-// }
+    [Header("기본 정보")]
+    [SerializeReference, SubclassSelector]
+    private List<SkillModule> modules;
+
+    public string Name { readonly get => name; set => name = value; }
+    public float Cooldown { readonly get => cooldown; set => cooldown = value; }
+    public float Duration { readonly get => duration; set => duration = value; }
+    public int UseEnergy { readonly get => useEnergy; set => useEnergy = value; }
+    public Vector2 Offset { readonly get => offset; set => offset = value; }
+    public List<SkillModule> Modules { readonly get => modules; set => modules = value; }
+
+    public SkillData(SkillDataSO so)
+    {
+        name = so.SkillName;
+        cooldown = so.Cooldown;
+        duration = so.Duration;
+        useEnergy = so.UseEnergy;
+        offset = so.Offset;
+        modules = new();
+        if (so.Modules != null)
+        {
+            foreach (SkillModule module in so.Modules)
+            {
+                SkillModule moduleCopy = module.Clone();
+                modules.Add(moduleCopy);
+            }
+        }
+
+    }
+    public readonly void Setup(GameObject caster, GameObject parent)
+    {
+        if (modules != null)
+        {
+            foreach (SkillModule module in modules)
+            {
+                module.Setup(caster, parent);
+            }
+        }
+
+    }
+}

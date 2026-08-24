@@ -27,7 +27,6 @@ MonoBehaviour:
       data:
         prefab: {fileID: 909452230894646114, guid: 178fa84ef18652949a44ada270649d75, type: 3}
         effectData:
-          prefabPath: Skills/Effects/Skill_001/FX_Skill_001
           startup: 0
           duration: 3
           size: {x: 1, y: 1}
@@ -36,8 +35,9 @@ MonoBehaviour:
           - duration: 0.2
             size: {x: 2, y: 3}
             offset: {x: 0, y: -0.3}
-            hitData:
-              damage: 50
-              knockback: 2.5
+            defenderHitData:
+              damage: 40
+              knockback: 0
               buffs: 
               debuffs: 
+        effect: {fileID: 0}

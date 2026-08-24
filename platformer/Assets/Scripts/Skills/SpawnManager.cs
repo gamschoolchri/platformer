@@ -45,7 +45,7 @@ public class SpawnManager : MonoBehaviour
         var trigger = Instance;
     }
 
-    public void SpawnSkill(GameObject caster, string skillID, int facing)
+    public void SpawnSkill(GameObject caster, string skillID)
     {
         if (!skillPool.ContainsKey(skillID))
             skillPool[skillID] = new List<Skill>();
@@ -61,10 +61,10 @@ public class SpawnManager : MonoBehaviour
             skill = Instantiate(prefab, Container);
             skillPool[skillID].Add(skill);
         }
-        skill.Setup(caster, facing);
+        skill.Setup(caster);
 
     }
-    public void SpawnHitbox(GameObject caster, GameObject skillObject, HitboxData data, int facing)
+    public void SpawnHitbox(GameObject caster, GameObject skillObject, HitboxData data)
     {
         Hitbox hitbox = hitboxPool.Find(x => !x.gameObject.activeInHierarchy);
         if (hitbox == null)
@@ -72,7 +72,7 @@ public class SpawnManager : MonoBehaviour
             hitbox = Instantiate(Settings.Instance.defaultHitbox, Container);
             hitboxPool.Add(hitbox);
         }
-        hitbox.Setup(caster, skillObject, data, facing);
+        hitbox.Setup(caster, skillObject, data);
     }
 
     public void Clear()

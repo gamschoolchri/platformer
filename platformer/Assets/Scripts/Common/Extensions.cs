@@ -28,6 +28,11 @@ public static class Extensions
 
         return closestTarget;
     }
+    public static int Facing(this GameObject target)
+    {
+        if (!target.TryGetComponent(out SpriteRenderer sr)) return 1;
+        else return sr.flipX ? -1 : 1;
+    }
 
     public static bool NullCheck<T>(this T target, string name)
     {

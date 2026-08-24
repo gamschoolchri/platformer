@@ -16,13 +16,11 @@ public class Entity : MonoBehaviour
 
     private Vector2 floorCheckSize;
 
-    [SerializeField] private int facing = 1;
     [SerializeField] private bool isHurtboxActive = false;
     [SerializeField] private bool isOnFloor = false;
     [SerializeField] private bool isMoving = false;
     [SerializeField] private bool isAction = false;
 
-    public int Facing => facing;
     public bool IsHurtboxActive => isHurtboxActive;
     public bool IsOnFloor => isOnFloor;
     public bool IsMoving => isMoving;
@@ -44,8 +42,7 @@ public class Entity : MonoBehaviour
     {
         if (rb.linearVelocity.x != 0)
         {
-            facing = (int)Mathf.Sign(rb.linearVelocity.x);
-            sr.flipX = facing == -1;
+            sr.flipX = Mathf.Sign(rb.linearVelocity.x) == -1.0f;
         }
         isMoving = rb.linearVelocity.sqrMagnitude > 0.01f;
         isOnFloor = CheckOnFloor();

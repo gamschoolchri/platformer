@@ -22,7 +22,6 @@ public class Enemy : MonoBehaviour
 
         so = ent.EntityDataSO as EnemyDataSO;
         so.NullCheck(nameof(Enemy));
-        data = new(so);
         Setup(); //soon delete
 
     }
