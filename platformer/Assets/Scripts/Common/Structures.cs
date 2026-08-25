@@ -3,6 +3,39 @@ using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
+public struct Range
+{
+    [SerializeField] private float start;
+    [SerializeField] private float end;
+    private float min;
+    private float max;
+
+    public Range(float start, float end)
+    {
+        this.start = start;
+        this.end = end;
+        min = Mathf.Min(start, end);
+        max = Mathf.Max(start, end);
+    }
+    public float Start { readonly get => start; set => start = value; }
+    public float End { readonly get => end; set => end = value; }
+    public float Min { readonly get => min; set => min = value; }
+    public float Max { readonly get => max; set => max = value; }
+
+    public readonly bool Contains(float value)
+    {
+        return value >= min && value <= max;
+    }
+
+    public readonly bool ContainsExclusive(float value)
+    {
+        return value > min && value < max;
+    }
+
+    public readonly float Clamp(float value) => Mathf.Clamp(value, min, max);
+}
+
+[System.Serializable]
 public enum Buff
 {
 
@@ -167,7 +200,7 @@ public struct EnemyData
 
 
 
-
+    public EnemyData(EnemyDataSO so) { }
 }
 
 

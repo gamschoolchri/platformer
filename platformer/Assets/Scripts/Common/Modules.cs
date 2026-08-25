@@ -127,11 +127,16 @@ public abstract class SkillCondition
 }
 public class CooldownCondition : SkillCondition
 {
-    private bool cannotExecute;
+    private bool isOnCooldown;
 
-    public override bool CanExecute() => !cannotExecute;
+    public override bool CanExecute() => !isOnCooldown;
     public override void OnExecute()
     {
-        CoroutineManager.Instance.Toggle(value => cannotExecute = value, 0f, skill.SkillData.Cooldown);
+        CoroutineManager.Instance.Toggle(value => isOnCooldown = value, 0f, skill.SkillData.Cooldown);
     }
 }
+// public class DistanceCondition : SkillCondition{
+//     [SerializeField] private Range distance;
+//     private Enemy 
+//     public override bool CanExecute() => 
+// }

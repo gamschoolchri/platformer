@@ -11,8 +11,6 @@ public class Enemy : MonoBehaviour
     public ref EnemyData EnemyData => ref data;
     private Entity ent;
 
-    [SerializeField] private bool isHurtboxActive = false;
-    public bool IsHurtboxActive => isHurtboxActive;
 
 
 
@@ -22,6 +20,7 @@ public class Enemy : MonoBehaviour
 
         so = ent.EntityDataSO as EnemyDataSO;
         so.NullCheck(nameof(Enemy));
+        data = new(so);
         Setup(); //soon delete
 
     }
