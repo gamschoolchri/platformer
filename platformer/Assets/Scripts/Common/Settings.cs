@@ -20,6 +20,7 @@ public class Settings : ScriptableObject
     [Header("프리팹 설정")]
     public Hitbox defaultHitbox;
     public Hurtbox defaultHurtbox;
+    public GameObject player;
     public GameObject damageTextPrefab;
 
     [Header("레이어 설정")]

@@ -50,7 +50,7 @@ public enum DeBuff
 [System.Serializable]
 public enum MovementType
 {
-    Attatched, Projectile, Static
+    Static, Walker, Runner, Flying
 }
 
 [System.Serializable]
@@ -171,7 +171,7 @@ public struct CharacterData
 
 
 
-    public CharacterData(Character caster, CharacterDataSO so)
+    public CharacterData(GameObject caster, CharacterDataSO so)
     {
         maxHealth = so.MaxHealth;
         health = so.MaxHealth;
@@ -197,10 +197,16 @@ public struct CharacterData
 [System.Serializable]
 public struct EnemyData
 {
+    private GameObject target;
+    private MovementType type;
+    public GameObject Target { readonly get => target; set => target = value; }
+    public MovementType Type { readonly get => type; set => type = value; }
 
-
-
-    public EnemyData(EnemyDataSO so) { }
+    public EnemyData(EnemyDataSO so)
+    {
+        target = Settings.Instance.player;
+        type = so.Type;
+    }
 }
 
 
@@ -234,7 +240,7 @@ public struct SkillPack
         return clone;
     }
 
-    public readonly void Setup(Character caster)
+    public readonly void Setup(GameObject caster)
     {
         if (conditions != null)
         {

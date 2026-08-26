@@ -65,6 +65,6 @@ public class CharacterDataSO : EntityDataSO
 [CreateAssetMenu(fileName = "NewEnemyData", menuName = "Scriptable Objects/Enemy Data")]
 public class EnemyDataSO : CharacterDataSO
 {
-
-
+    [SerializeField] private MovementType type;
+    public MovementType Type => type;
 }

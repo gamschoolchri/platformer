@@ -38,9 +38,9 @@ public class CoroutineManager : MonoBehaviour
 
     public static WaitForSeconds WaitForSeconds(float seconds)
     {
-        if (!timeDict.TryGetValue(seconds, out var wait))
+        if (!timeDict.TryGetValue(seconds, out WaitForSeconds wait))
         {
-            timeDict.Add(seconds, wait = new WaitForSeconds(seconds));
+            timeDict.Add(seconds, wait = new(seconds));
         }
 
         return wait;

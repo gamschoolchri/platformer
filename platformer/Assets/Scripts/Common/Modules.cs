@@ -110,13 +110,13 @@ public class EffectModule : SkillModule
 [Serializable]
 public abstract class SkillCondition
 {
-    protected Character caster;
+    protected GameObject caster;
     protected Skill skill;
     public virtual SkillCondition Clone()
     {
         return (SkillCondition)MemberwiseClone();
     }
-    public virtual void Setup(Character caster, Skill skill)
+    public virtual void Setup(GameObject caster, Skill skill)
     {
         this.caster = caster;
         this.skill = skill;
@@ -135,8 +135,16 @@ public class CooldownCondition : SkillCondition
         CoroutineManager.Instance.Toggle(value => isOnCooldown = value, 0f, skill.SkillData.Cooldown);
     }
 }
-// public class DistanceCondition : SkillCondition{
-//     [SerializeField] private Range distance;
-//     private Enemy 
-//     public override bool CanExecute() => 
-// }
+public class DistanceCondition : SkillCondition
+{
+    [SerializeField] private Range distance;
+    public Range Distance { get => distance; set => distance = value; }
+    private Range sqrDistance;
+    private Enemy casterEnemy;
+    // public override void Setup(GameObject caster, Skill skill)
+    // {
+    //     base.Setup(caster,skill);
+    //     casterEnemy=caster.get
+    // }
+    public override bool CanExecute() { return false; }
+}

@@ -23,7 +23,7 @@ public class Character : MonoBehaviour
 
         so = ent.EntityDataSO as CharacterDataSO;
         so.NullCheck(nameof(Character));
-        data = new(this, so);
+        data = new(gameObject, so);
         Setup(); //soon delete
 
     }

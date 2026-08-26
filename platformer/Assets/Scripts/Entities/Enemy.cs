@@ -11,6 +11,18 @@ public class Enemy : MonoBehaviour
     public ref EnemyData EnemyData => ref data;
     private Entity ent;
 
+    private float sqrDistanceToTarget()
+    {
+        if (!data.NullCheck(nameof(Enemy)))
+        {
+            Vector2 targetPosition = data.Target.transform.position;
+            Vector2 curPosition = transform.position;
+            return (targetPosition - curPosition).sqrMagnitude;
+        }
+        return 0f;
+    }
+
+
 
 
 
