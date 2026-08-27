@@ -16,12 +16,9 @@ public class Entity : MonoBehaviour
 
     private Vector2 floorCheckSize;
 
-    [SerializeField] private bool isHurtboxActive = false;
     [SerializeField] private bool isOnFloor = false;
     [SerializeField] private bool isMoving = false;
     [SerializeField] private bool isAction = false;
-
-    public bool IsHurtboxActive => isHurtboxActive;
     public bool IsOnFloor => isOnFloor;
     public bool IsMoving => isMoving;
     public bool IsAction => isAction;

@@ -17,10 +17,16 @@ MonoBehaviour:
   defaultSize: {x: 1, y: 1}
   maxHealth: 100
   maxEnergy: 100
-  buffs: 
-  debuffs: 
   hurtboxData:
     size: {x: 1.5, y: 2}
     offset: {x: 0, y: 1}
-  skills:
-  - {fileID: 0}
+  buffs: 
+  debuffs: 
+  skillPacks:
+  - skill: {fileID: -2854652905770942533, guid: 8410de3cef8f6fa42893cffef7291062, type: 3}
+    priority: 0
+    canInterrupt: 0
+    conditions: []
+  references:
+    version: 2
+    RefIds: []

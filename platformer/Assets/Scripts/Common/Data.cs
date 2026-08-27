@@ -51,6 +51,7 @@ public class CharacterDataSO : EntityDataSO
     [SerializeField] private List<DeBuff> debuffs;
 
     [Header("스킬 목록")]
+    [SerializeField] private float globalCoolDown;
     [SerializeField] private List<SkillPack> skillPacks;
 
     public int MaxHealth => maxHealth;
@@ -58,13 +59,15 @@ public class CharacterDataSO : EntityDataSO
     public HurtboxData HurtboxData => hurtboxData;
     public IReadOnlyList<Buff> Buffs => buffs;
     public IReadOnlyList<DeBuff> Debuffs => debuffs;
+    public float GCD => globalCoolDown;
     public IReadOnlyList<SkillPack> SkillPacks => skillPacks;
+
 
 }
 
 [CreateAssetMenu(fileName = "NewEnemyData", menuName = "Scriptable Objects/Enemy Data")]
 public class EnemyDataSO : CharacterDataSO
 {
-    [SerializeField] private MovementType type;
-    public MovementType Type => type;
+    [SerializeField] private List<EnemyModule> modules;
+    public IReadOnlyList<EnemyModule> Modules => modules;
 }

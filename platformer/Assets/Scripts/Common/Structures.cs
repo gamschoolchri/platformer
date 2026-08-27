@@ -156,6 +156,7 @@ public struct CharacterData
     [SerializeField] private List<Buff> buffs;
     [SerializeField] private List<DeBuff> debuffs;
     [SerializeField] private HurtboxData hurtboxData;
+    [SerializeField] private float globalCoolDown;
     [SerializeField] private List<SkillPack> skillPacks;
 
     public int MaxHealth { readonly get => maxHealth; set => maxHealth = value; }
@@ -164,7 +165,9 @@ public struct CharacterData
     public int Energy { readonly get => energy; set => energy = Mathf.Clamp(value, 0, maxEnergy); }
     public List<Buff> Buffs { readonly get => buffs; set => buffs = value; }
     public List<DeBuff> Debuffs { readonly get => debuffs; set => debuffs = value; }
+    public float GCD { readonly get => globalCoolDown; set => globalCoolDown = value; }
     public List<SkillPack> SkillPacks { readonly get => skillPacks; set => skillPacks = value; }
+
 
     public readonly HurtboxData HurtboxData => hurtboxData;
 
@@ -181,6 +184,7 @@ public struct CharacterData
         buffs = (so.Buffs != null) ? new(so.Buffs) : new();
         debuffs = (so.Debuffs != null) ? new(so.Debuffs) : new();
         hurtboxData = so.HurtboxData;
+        globalCoolDown = so.GCD;
         skillPacks = new();
         if (so.SkillPacks != null)
         {
@@ -197,15 +201,32 @@ public struct CharacterData
 [System.Serializable]
 public struct EnemyData
 {
-    private GameObject target;
-    private MovementType type;
-    public GameObject Target { readonly get => target; set => target = value; }
-    public MovementType Type { readonly get => type; set => type = value; }
+    [SerializeField] private List<EnemyModule> modules;
+    public List<EnemyModule> Modules { readonly get => modules; set => modules = value; }
 
     public EnemyData(EnemyDataSO so)
     {
-        target = Settings.Instance.player;
-        type = so.Type;
+        modules = new();
+
+        if (so.Modules != null)
+        {
+            foreach (EnemyModule module in so.Modules)
+            {
+                EnemyModule moduleCopy = module.Clone();
+                modules.Add(moduleCopy);
+            }
+        }
+    }
+    public readonly void Setup(GameObject caster)
+    {
+        if (modules != null)
+        {
+            foreach (EnemyModule module in modules)
+            {
+                module.Setup(caster);
+            }
+        }
+
     }
 }
 
@@ -216,8 +237,7 @@ public struct SkillPack
     [Header("스킬 정보")]
     [SerializeField] private Skill skill;
 
-    [Header("발동 정책 및 우선순위")]
-    [SerializeField] private int priority;
+    [Header("발동 정책")]
     [SerializeField] private bool canInterrupt;
 
     [Header("엔티티 전용 발동 조건 모듈들")]
@@ -225,7 +245,6 @@ public struct SkillPack
     private List<SkillCondition> conditions;
 
     public Skill Skill { readonly get => skill; set => skill = value; }
-    public int Priority { readonly get => priority; set => priority = value; }
 
     public bool CanInterrupt { readonly get => canInterrupt; set => canInterrupt = value; }
 

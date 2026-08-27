@@ -8,7 +8,6 @@ public class Effect : MonoBehaviour
     public void Setup(GameObject caster, GameObject skillObject, EffectData data)
     {
         if (data.NullCheck(nameof(Effect))) return;
-        Debug.Log(data.Duration);
         this.data = data;
         this.caster = caster;
         this.skillObject = skillObject;

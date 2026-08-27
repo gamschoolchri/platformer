@@ -13,6 +13,7 @@ public class Character : MonoBehaviour
 
     private Hurtbox hurtbox;
     [SerializeField] private bool isHurtboxActive = false;
+    [SerializeField] private bool OnGCD = false;
     public bool IsHurtboxActive => isHurtboxActive;
 
 
@@ -42,7 +43,32 @@ public class Character : MonoBehaviour
         hurtbox.Setup(data.HurtboxData);
         SetHurtboxActive(true);
     }
-
+    public void UseSkill(int? skillIndex = null)
+    {
+        if (OnGCD) return;
+        if (skillIndex == null)
+        {
+            foreach (SkillPack skillPack in data.SkillPacks)
+            {
+                if (skillPack.CanExecute())
+                {
+                    SpawnManager.Instance.SpawnSkill(gameObject, skillPack.Skill.name);
+                    CoroutineManager.Instance.Toggle((value) => OnGCD = value, 0f, data.GCD);
+                    return;
+                }
+            }
+        }
+        else
+        {
+            SkillPack skillPack = data.SkillPacks[skillIndex.Value];
+            if (skillPack.CanExecute())
+            {
+                SpawnManager.Instance.SpawnSkill(gameObject, skillPack.Skill.name);
+                CoroutineManager.Instance.Toggle((value) => OnGCD = value, 0f, data.GCD);
+                return;
+            }
+        }
+    }
     public void OnAttack(AttackerHitData attackerHitData) { }
     public void OnDamage(DefenderHitData defenderHitData) { }
     public void SetHurtboxActive(bool isActive)

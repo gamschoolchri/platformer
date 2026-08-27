@@ -1,7 +1,7 @@
 using UnityEngine;
-
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Entity))]
+[RequireComponent(typeof(Character))]
 public class Enemy : MonoBehaviour
 {
 
@@ -10,17 +10,20 @@ public class Enemy : MonoBehaviour
     private EnemyData data;
     public ref EnemyData EnemyData => ref data;
     private Entity ent;
+    private Character chara;
+    private bool isDetecting;
 
-    private float sqrDistanceToTarget()
-    {
-        if (!data.NullCheck(nameof(Enemy)))
-        {
-            Vector2 targetPosition = data.Target.transform.position;
-            Vector2 curPosition = transform.position;
-            return (targetPosition - curPosition).sqrMagnitude;
-        }
-        return 0f;
-    }
+
+    // public float sqrDistanceToTarget()
+    // {
+    //     if (!data.NullCheck(nameof(Enemy)))
+    //     {
+    //         Vector2 targetPosition = data.Target.transform.position;
+    //         Vector2 curPosition = transform.position;
+    //         return (targetPosition - curPosition).sqrMagnitude;
+    //     }
+    //     return 0f;
+    // }
 
 
 
@@ -29,6 +32,7 @@ public class Enemy : MonoBehaviour
     void Awake()
     {
         ent = GetComponent<Entity>();
+        chara = GetComponent<Character>();
 
         so = ent.EntityDataSO as EnemyDataSO;
         so.NullCheck(nameof(Enemy));
@@ -41,6 +45,10 @@ public class Enemy : MonoBehaviour
     private void Setup()
     {
 
+    }
+    void FixedUpdate()
+    {
+        chara.UseSkill();
     }
 
 }

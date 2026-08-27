@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
@@ -141,10 +142,38 @@ public class DistanceCondition : SkillCondition
     public Range Distance { get => distance; set => distance = value; }
     private Range sqrDistance;
     private Enemy casterEnemy;
-    // public override void Setup(GameObject caster, Skill skill)
-    // {
-    //     base.Setup(caster,skill);
-    //     casterEnemy=caster.get
-    // }
-    public override bool CanExecute() { return false; }
+    public override void Setup(GameObject caster, Skill skill)
+    {
+        base.Setup(caster, skill);
+        casterEnemy = caster.GetComponent<Enemy>();
+        float sqrStart = distance.Start * distance.Start;
+        float sqrEnd = distance.End * distance.End;
+        sqrDistance = new(sqrStart, sqrEnd);
+    }
+    public override bool CanExecute() => true; //sqrDistance.Contains(casterEnemy.sqrDistanceToTarget());
+}
+public class EnergyCondition : SkillCondition
+{
+    private int useEnergy;
+    private Character casterCharacter;
+    public int UseEnergy { get => useEnergy; set => useEnergy = value; }
+    public override void Setup(GameObject caster, Skill skill)
+    {
+        base.Setup(caster, skill);
+        casterCharacter = caster.GetComponent<Character>();
+        useEnergy = skill.SkillData.UseEnergy;
+    }
+    public override bool CanExecute() => casterCharacter.CharacterData.Energy >= useEnergy;
+}
+
+public abstract class EnemyModule
+{
+    public virtual void Setup(GameObject caster)
+    {
+
+    }
+    public virtual EnemyModule Clone()
+    {
+        return (EnemyModule)MemberwiseClone();
+    }
 }
