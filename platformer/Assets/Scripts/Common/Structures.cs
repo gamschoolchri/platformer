@@ -17,22 +17,38 @@ public struct Range
         min = Mathf.Min(start, end);
         max = Mathf.Max(start, end);
     }
+    public Range(Range other) : this(other.Start, other.End) { }
     public float Start { readonly get => start; set => start = value; }
     public float End { readonly get => end; set => end = value; }
     public float Min { readonly get => min; set => min = value; }
     public float Max { readonly get => max; set => max = value; }
 
-    public readonly bool Contains(float value)
-    {
-        return value >= min && value <= max;
-    }
-
-    public readonly bool ContainsExclusive(float value)
-    {
-        return value > min && value < max;
-    }
-
+    public readonly float Center => (start + end) * 0.5f;
+    public readonly float Size => max - min;
+    public readonly bool Contains(float value) => value >= min && value <= max;
+    public readonly bool ContainsExclusive(float value) => value > min && value < max;
     public readonly float Clamp(float value) => Mathf.Clamp(value, min, max);
+}
+[System.Serializable]
+public struct VectorRange
+{
+
+    [SerializeField] private Range rangeX;
+    [SerializeField] private Range rangeY;
+    public Range RangeX { readonly get => rangeX; set => rangeX = value; }
+    public Range RangeY { readonly get => rangeY; set => rangeY = value; }
+
+    public VectorRange(Range rangeX, Range rangeY)
+    {
+        this.rangeX = new(rangeX);
+        this.rangeY = new(rangeY);
+    }
+    public VectorRange(VectorRange other) : this(other.RangeX, other.RangeY) { }
+
+    public readonly Vector2 Center => new(rangeX.Center, rangeY.Center);
+    public readonly Vector2 Size => new(rangeX.Size, rangeY.Size);
+    public readonly bool Contains(Vector2 value) => rangeX.Contains(value.x) && rangeY.Contains(value.y);
+    public readonly bool ContainsExclusive(Vector2 value) => rangeX.ContainsExclusive(value.x) && rangeY.ContainsExclusive(value.y);
 }
 
 [System.Serializable]
@@ -42,9 +58,15 @@ public enum Buff
 }
 
 [System.Serializable]
-public enum DeBuff
+public enum Debuff
 {
 
+}
+
+[System.Serializable]
+public enum State
+{
+    Idle, Walking, Running, Damage, Dead, Skill = 100
 }
 
 [System.Serializable]
@@ -59,12 +81,12 @@ public struct DefenderHitData
     [SerializeField] private float damage;
     [SerializeField] private float knockback;
     [SerializeField] private List<Buff> buffs;
-    [SerializeField] private List<DeBuff> debuffs;
+    [SerializeField] private List<Debuff> debuffs;
 
     public readonly float Damage => damage;
     public readonly float Knockback => knockback;
     public readonly IReadOnlyList<Buff> Buffs => buffs;
-    public readonly IReadOnlyList<DeBuff> Debuffs => debuffs;
+    public readonly IReadOnlyList<Debuff> Debuffs => debuffs;
 }
 
 [System.Serializable]
@@ -144,6 +166,11 @@ public struct EntityData
         defaultSize = so.DefaultSize;
         size = so.DefaultSize;
     }
+    public void Setup()
+    {
+        speed = defaultSpeed;
+        size = defaultSize;
+    }
 }
 
 [System.Serializable]
@@ -154,7 +181,9 @@ public struct CharacterData
     [SerializeField] private int maxEnergy;
     [SerializeField] private int energy;
     [SerializeField] private List<Buff> buffs;
-    [SerializeField] private List<DeBuff> debuffs;
+    [SerializeField] private List<Buff> defaultBuffs;
+    [SerializeField] private List<Debuff> debuffs;
+    [SerializeField] private List<Debuff> defaultDebuffs;
     [SerializeField] private HurtboxData hurtboxData;
     [SerializeField] private float globalCoolDown;
     [SerializeField] private List<SkillPack> skillPacks;
@@ -164,7 +193,9 @@ public struct CharacterData
     public int MaxEnergy { readonly get => maxEnergy; set => maxEnergy = value; }
     public int Energy { readonly get => energy; set => energy = Mathf.Clamp(value, 0, maxEnergy); }
     public List<Buff> Buffs { readonly get => buffs; set => buffs = value; }
-    public List<DeBuff> Debuffs { readonly get => debuffs; set => debuffs = value; }
+    public readonly IReadOnlyList<Buff> DefaultBuffs => defaultBuffs;
+    public List<Debuff> Debuffs { readonly get => debuffs; set => debuffs = value; }
+    public readonly IReadOnlyList<Debuff> DefaultDebuffs => defaultDebuffs;
     public float GCD { readonly get => globalCoolDown; set => globalCoolDown = value; }
     public List<SkillPack> SkillPacks { readonly get => skillPacks; set => skillPacks = value; }
 
@@ -174,15 +205,16 @@ public struct CharacterData
 
 
 
-    public CharacterData(GameObject caster, CharacterDataSO so)
+    public CharacterData(CharacterDataSO so)
     {
         maxHealth = so.MaxHealth;
-        health = so.MaxHealth;
+        health = maxHealth;
         maxEnergy = so.MaxEnergy;
-        energy = so.MaxEnergy;
-
-        buffs = (so.Buffs != null) ? new(so.Buffs) : new();
-        debuffs = (so.Debuffs != null) ? new(so.Debuffs) : new();
+        energy = maxEnergy;
+        defaultBuffs = (so.Buffs != null) ? new(so.Buffs) : new();
+        defaultDebuffs = (so.Debuffs != null) ? new(so.Debuffs) : new();
+        buffs = new(defaultBuffs);
+        debuffs = new(defaultDebuffs);
         hurtboxData = so.HurtboxData;
         globalCoolDown = so.GCD;
         skillPacks = new();
@@ -191,42 +223,86 @@ public struct CharacterData
             foreach (SkillPack skillPack in so.SkillPacks)
             {
                 SkillPack skillPackCopy = skillPack.Clone();
-                skillPackCopy.Setup(caster);
+
                 skillPacks.Add(skillPackCopy);
             }
         }
+    }
+    public void Setup(GameObject caster)
+    {
+        health = maxHealth;
+        energy = maxEnergy;
+        buffs = new(defaultBuffs);
+        debuffs = new(defaultDebuffs);
+        if (skillPacks != null)
+        {
+            foreach (SkillPack skillPack in skillPacks)
+            {
+                skillPack.Setup(caster);
+            }
+        }
+
     }
 }
 
 [System.Serializable]
 public struct EnemyData
 {
-    [SerializeField] private List<EnemyModule> modules;
-    public List<EnemyModule> Modules { readonly get => modules; set => modules = value; }
+    [SerializeField] private GameObject target;
+    [SerializeField] private List<DetectCondition> conditions;
+    [SerializeField] private float distance;
+    [SerializeField] private MovementType type;
+    [SerializeField] private VectorRange detectRange;
+    [SerializeField] private VectorRange detectLastingRange;
+
+    public GameObject Target { readonly get => target; set => target = value; }
+    public List<DetectCondition> DetectConditions { readonly get => conditions; set => conditions = value; }
+    public float Distance { readonly get => distance; set => distance = value; }
+    public MovementType MovementType { readonly get => type; set => type = value; }
+    public VectorRange DetectRange { readonly get => detectRange; set => detectRange = value; }
+    public VectorRange DetectLastingRange { readonly get => detectLastingRange; set => detectLastingRange = value; }
+
+
+
 
     public EnemyData(EnemyDataSO so)
     {
-        modules = new();
-
-        if (so.Modules != null)
+        target = null;
+        conditions = new();
+        if (so.DetectConditions != null)
         {
-            foreach (EnemyModule module in so.Modules)
+            foreach (DetectCondition detectCondition in so.DetectConditions)
             {
-                EnemyModule moduleCopy = module.Clone();
-                modules.Add(moduleCopy);
+                DetectCondition detectConditionCopy = detectCondition.Clone();
+                conditions.Add(detectConditionCopy);
             }
         }
+        distance = 0f;
+        type = so.MovementType;
+        detectRange = new(so.DetectRange);
+        detectLastingRange = new(so.DetectLastingRange);
     }
-    public readonly void Setup(GameObject caster)
+    public void Setup(GameObject caster)
     {
-        if (modules != null)
+        target = null;
+        distance = 0f;
+        if (conditions != null)
         {
-            foreach (EnemyModule module in modules)
+            foreach (DetectCondition condition in conditions)
             {
-                module.Setup(caster);
+                condition.Setup(caster);
             }
         }
 
+    }
+    public readonly bool IsMatch(GameObject target)
+    {
+        if (target == null) return false;
+        foreach (DetectCondition condition in conditions)
+        {
+            if (!condition.IsMatch(target)) return false;
+        }
+        return true;
     }
 }
 

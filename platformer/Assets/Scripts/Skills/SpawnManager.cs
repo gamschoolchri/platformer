@@ -69,7 +69,7 @@ public class SpawnManager : MonoBehaviour
         Hitbox hitbox = hitboxPool.Find(x => !x.gameObject.activeInHierarchy);
         if (hitbox == null)
         {
-            hitbox = Instantiate(Settings.Instance.defaultHitbox, Container);
+            hitbox = Instantiate(Settings.Instance.DefaultHitbox, Container);
             hitboxPool.Add(hitbox);
         }
         hitbox.Setup(caster, skillObject, data);

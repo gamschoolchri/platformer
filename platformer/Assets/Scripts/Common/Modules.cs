@@ -126,6 +126,7 @@ public abstract class SkillCondition
     public virtual void OnExecute() { }
 
 }
+[Serializable]
 public class CooldownCondition : SkillCondition
 {
     private bool isOnCooldown;
@@ -136,6 +137,7 @@ public class CooldownCondition : SkillCondition
         CoroutineManager.Instance.Toggle(value => isOnCooldown = value, 0f, skill.SkillData.Cooldown);
     }
 }
+[Serializable]
 public class DistanceCondition : SkillCondition
 {
     [SerializeField] private Range distance;
@@ -152,6 +154,7 @@ public class DistanceCondition : SkillCondition
     }
     public override bool CanExecute() => true; //sqrDistance.Contains(casterEnemy.sqrDistanceToTarget());
 }
+[Serializable]
 public class EnergyCondition : SkillCondition
 {
     private int useEnergy;
@@ -165,7 +168,7 @@ public class EnergyCondition : SkillCondition
     }
     public override bool CanExecute() => casterCharacter.CharacterData.Energy >= useEnergy;
 }
-
+[Serializable]
 public abstract class EnemyModule
 {
     public virtual void Setup(GameObject caster)
@@ -175,5 +178,38 @@ public abstract class EnemyModule
     public virtual EnemyModule Clone()
     {
         return (EnemyModule)MemberwiseClone();
+    }
+}
+
+[Serializable]
+public abstract class DetectCondition
+{
+    protected GameObject caster;
+    public abstract bool IsMatch(GameObject target);
+    public virtual DetectCondition Clone()
+    {
+        return (DetectCondition)MemberwiseClone();
+    }
+    public virtual void Setup(GameObject caster)
+    {
+        this.caster = caster;
+    }
+}
+[Serializable]
+public class TagCondition : DetectCondition
+{
+    [SerializeField] private string defaultTargetTag;
+    private string targetTag;
+    public string DefaultTargetTag => defaultTargetTag;
+    public string TargetTag { get => targetTag; set { targetTag = value; targetTagHandle = TagHandle.GetExistingTag(targetTag); } }
+    private TagHandle targetTagHandle;
+    public override void Setup(GameObject caster)
+    {
+        base.Setup(caster);
+        TargetTag = defaultTargetTag;
+    }
+    public override bool IsMatch(GameObject target)
+    {
+        return target.CompareTag(targetTagHandle);
     }
 }

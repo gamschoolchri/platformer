@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
+  m_Script: {fileID: 11500000, guid: dbd9f4d8b27c42041b6e59660e5881a9, type: 3}
   m_Name: Entity_001
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDataSO
   entityName: DevilSpearMan
@@ -22,11 +22,27 @@ MonoBehaviour:
     offset: {x: 0, y: 1}
   buffs: 
   debuffs: 
+  globalCoolDown: 100
   skillPacks:
   - skill: {fileID: -2854652905770942533, guid: 8410de3cef8f6fa42893cffef7291062, type: 3}
-    priority: 0
-    canInterrupt: 0
+    canInterrupt: 1
     conditions: []
+  type: 0
+  detectRange:
+    rangeX:
+      start: 0
+      end: 10
+    rangeY:
+      start: 0
+      end: 10
+  detectLastingRange:
+    rangeX:
+      start: 10
+      end: 10
+    rangeY:
+      start: 10
+      end: 10
+  detectConditions: []
   references:
     version: 2
     RefIds: []

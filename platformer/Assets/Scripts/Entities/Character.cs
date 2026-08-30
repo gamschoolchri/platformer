@@ -24,28 +24,29 @@ public class Character : MonoBehaviour
 
         so = ent.EntityDataSO as CharacterDataSO;
         so.NullCheck(nameof(Character));
-        data = new(gameObject, so);
-        Setup(); //soon delete
+        data = new(so);
 
     }
     void OnEnable()
     {
         CharacterManager.Instance.RegisterCharacter(this);
+        Setup();
     }
     void OnDisable()
     {
         CharacterManager.Instance.UnRegisterCharacter(this);
     }
 
-    private void Setup()
+    public void Setup()
     {
-        if (hurtbox == null) hurtbox = Instantiate(Settings.Instance.defaultHurtbox, transform);
+        data.Setup(gameObject);
+        if (hurtbox == null) hurtbox = Instantiate(Settings.Instance.DefaultHurtbox, transform);
         hurtbox.Setup(data.HurtboxData);
         SetHurtboxActive(true);
     }
     public void UseSkill(int? skillIndex = null)
     {
-        if (OnGCD) return;
+        if (OnGCD || data.SkillPacks == null) return;
         if (skillIndex == null)
         {
             foreach (SkillPack skillPack in data.SkillPacks)

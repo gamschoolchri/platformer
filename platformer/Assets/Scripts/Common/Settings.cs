@@ -18,13 +18,22 @@ public class Settings : ScriptableObject
     }
 
     [Header("프리팹 설정")]
-    public Hitbox defaultHitbox;
-    public Hurtbox defaultHurtbox;
-    public GameObject player;
-    public GameObject damageTextPrefab;
+    [SerializeField] private Hitbox defaultHitbox;
+    [SerializeField] private Hurtbox defaultHurtbox;
+    [SerializeField] private GameObject player;
+    [SerializeField] private GameObject damageTextPrefab;
+    public Hitbox DefaultHitbox => defaultHitbox;
+    public Hurtbox DefaultHurtbox => defaultHurtbox;
+    public GameObject Player => player;
+    public GameObject DamageTextPrefab => damageTextPrefab;
 
     [Header("레이어 설정")]
-    public LayerMask enemyLayer;
-    public LayerMask playerLayer;
+    [SerializeField] private LayerMask characterLayer;
+    [SerializeField] private LayerMask enemyLayer;
+    [SerializeField] private LayerMask playerLayer;
+    public LayerMask CharacterLayer => characterLayer;
+    public LayerMask EnemyLayer => enemyLayer;
+    public LayerMask PlayerLayer => playerLayer;
+
 
 }

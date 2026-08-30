@@ -34,6 +34,14 @@ public class Entity : MonoBehaviour
         col = GetComponent<Collider2D>();
         floorCheckSize = new(col.bounds.size.x, 0.1f);
     }
+    void OnEnable()
+    {
+        Setup();
+    }
+    public void Setup()
+    {
+        data.Setup();
+    }
 
     void FixedUpdate()
     {

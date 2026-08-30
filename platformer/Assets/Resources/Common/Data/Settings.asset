@@ -14,10 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Settings
   defaultHitbox: {fileID: 8299193268424805341, guid: aec12073231463d4c934ef5141663f79, type: 3}
   defaultHurtbox: {fileID: 2745739211993905557, guid: 72f86e8a2dec2bd4f9f23363271c070c, type: 3}
+  player: {fileID: 0}
   damageTextPrefab: {fileID: 0}
+  characterLayer:
+    serializedVersion: 2
+    m_Bits: 320
   enemyLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   playerLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
