@@ -28,20 +28,27 @@ MonoBehaviour:
     canInterrupt: 1
     conditions: []
   type: 0
-  detectRange:
+  targetDetectRange:
     rangeX:
       start: 0
-      end: 10
+      end: 3
     rangeY:
       start: 0
-      end: 10
-  detectLastingRange:
+      end: 3
+  targetSwitchRange:
     rangeX:
-      start: 10
-      end: 10
+      start: 0
+      end: 1.5
     rangeY:
-      start: 10
-      end: 10
+      start: 0
+      end: 1.5
+  targetMaintainRange:
+    rangeX:
+      start: 0
+      end: 5
+    rangeY:
+      start: 0
+      end: 5
   detectConditions: []
   references:
     version: 2

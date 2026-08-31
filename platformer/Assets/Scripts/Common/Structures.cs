@@ -7,27 +7,15 @@ public struct Range
 {
     [SerializeField] private float start;
     [SerializeField] private float end;
-    private float min;
-    private float max;
 
-    public Range(float start, float end)
-    {
-        this.start = start;
-        this.end = end;
-        min = Mathf.Min(start, end);
-        max = Mathf.Max(start, end);
-    }
-    public Range(Range other) : this(other.Start, other.End) { }
     public float Start { readonly get => start; set => start = value; }
     public float End { readonly get => end; set => end = value; }
-    public float Min { readonly get => min; set => min = value; }
-    public float Max { readonly get => max; set => max = value; }
 
     public readonly float Center => (start + end) * 0.5f;
-    public readonly float Size => max - min;
-    public readonly bool Contains(float value) => value >= min && value <= max;
-    public readonly bool ContainsExclusive(float value) => value > min && value < max;
-    public readonly float Clamp(float value) => Mathf.Clamp(value, min, max);
+    public readonly float Size => end - start;
+    public readonly bool Contains(float value) => start <= value && value <= end;
+    public readonly bool ContainsExclusive(float value) => start < value && value < end;
+    public readonly float Clamp(float value) => Mathf.Clamp(value, start, end);
 }
 [System.Serializable]
 public struct VectorRange
@@ -38,12 +26,6 @@ public struct VectorRange
     public Range RangeX { readonly get => rangeX; set => rangeX = value; }
     public Range RangeY { readonly get => rangeY; set => rangeY = value; }
 
-    public VectorRange(Range rangeX, Range rangeY)
-    {
-        this.rangeX = new(rangeX);
-        this.rangeY = new(rangeY);
-    }
-    public VectorRange(VectorRange other) : this(other.RangeX, other.RangeY) { }
 
     public readonly Vector2 Center => new(rangeX.Center, rangeY.Center);
     public readonly Vector2 Size => new(rangeX.Size, rangeY.Size);
@@ -252,15 +234,17 @@ public struct EnemyData
     [SerializeField] private List<DetectCondition> conditions;
     [SerializeField] private float distance;
     [SerializeField] private MovementType type;
-    [SerializeField] private VectorRange detectRange;
-    [SerializeField] private VectorRange detectLastingRange;
+    [SerializeField] private VectorRange targetDetectRange;
+    [SerializeField] private VectorRange targetSwitchRange;
+    [SerializeField] private VectorRange targetMaintainRange;
 
     public GameObject Target { readonly get => target; set => target = value; }
     public List<DetectCondition> DetectConditions { readonly get => conditions; set => conditions = value; }
     public float Distance { readonly get => distance; set => distance = value; }
     public MovementType MovementType { readonly get => type; set => type = value; }
-    public VectorRange DetectRange { readonly get => detectRange; set => detectRange = value; }
-    public VectorRange DetectLastingRange { readonly get => detectLastingRange; set => detectLastingRange = value; }
+    public VectorRange TargetDetectRange { readonly get => targetDetectRange; set => targetDetectRange = value; }
+    public VectorRange TargetSwitchRange { readonly get => targetSwitchRange; set => targetSwitchRange = value; }
+    public VectorRange TargetMaintainRange { readonly get => targetMaintainRange; set => targetMaintainRange = value; }
 
 
 
@@ -279,8 +263,9 @@ public struct EnemyData
         }
         distance = 0f;
         type = so.MovementType;
-        detectRange = new(so.DetectRange);
-        detectLastingRange = new(so.DetectLastingRange);
+        targetDetectRange = so.TargetDetectRange;
+        targetSwitchRange = so.TargetSwitchRange;
+        targetMaintainRange = so.TargetMaintainRange;
     }
     public void Setup(GameObject caster)
     {

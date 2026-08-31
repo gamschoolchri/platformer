@@ -47,4 +47,14 @@ public static class Extensions
         }
         return false;
     }
+
+
+    public static void DrawGizmo(this VectorRange range, Vector2 position, Color color)
+    {
+        Color originalColor = Gizmos.color;
+        Gizmos.color = color;
+        Gizmos.DrawWireCube(position + range.Center, range.Size);
+        Gizmos.color = originalColor;
+    }
 }
+

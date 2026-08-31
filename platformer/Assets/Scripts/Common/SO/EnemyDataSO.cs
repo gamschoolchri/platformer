@@ -6,8 +6,9 @@ public class EnemyDataSO : CharacterDataSO
 {
 
     [SerializeField] private MovementType type;
-    [SerializeField] private VectorRange detectRange;
-    [SerializeField] private VectorRange detectLastingRange;
+    [SerializeField] private VectorRange targetDetectRange;
+    [SerializeField] private VectorRange targetSwitchRange;
+    [SerializeField] private VectorRange targetMaintainRange;
 
     [SerializeReference, SubclassSelector]
     private List<DetectCondition> detectConditions;
@@ -16,7 +17,8 @@ public class EnemyDataSO : CharacterDataSO
 
     public IReadOnlyList<DetectCondition> DetectConditions => detectConditions;
     public MovementType MovementType => type;
-    public VectorRange DetectRange => detectRange;
-    public VectorRange DetectLastingRange => detectLastingRange;
+    public VectorRange TargetDetectRange => targetDetectRange;
+    public VectorRange TargetSwitchRange => targetSwitchRange;
+    public VectorRange TargetMaintainRange => targetMaintainRange;
 
 }

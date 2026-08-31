@@ -140,19 +140,15 @@ public class CooldownCondition : SkillCondition
 [Serializable]
 public class DistanceCondition : SkillCondition
 {
-    [SerializeField] private Range distance;
-    public Range Distance { get => distance; set => distance = value; }
-    private Range sqrDistance;
+    [SerializeField] private VectorRange distance;
+    public VectorRange Distance { get => distance; set => distance = value; }
     private Enemy casterEnemy;
     public override void Setup(GameObject caster, Skill skill)
     {
         base.Setup(caster, skill);
         casterEnemy = caster.GetComponent<Enemy>();
-        float sqrStart = distance.Start * distance.Start;
-        float sqrEnd = distance.End * distance.End;
-        sqrDistance = new(sqrStart, sqrEnd);
     }
-    public override bool CanExecute() => true; //sqrDistance.Contains(casterEnemy.sqrDistanceToTarget());
+    public override bool CanExecute() => distance.Contains(casterEnemy.EnemyData.Target.transform.position - caster.transform.position);
 }
 [Serializable]
 public class EnergyCondition : SkillCondition
