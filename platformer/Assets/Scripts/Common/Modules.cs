@@ -129,7 +129,7 @@ public abstract class SkillCondition
 [Serializable]
 public class CooldownCondition : SkillCondition
 {
-    private bool isOnCooldown;
+    [SerializeField] private bool isOnCooldown;
 
     public override bool CanExecute() => !isOnCooldown;
     public override void OnExecute()

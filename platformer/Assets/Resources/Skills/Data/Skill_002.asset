@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48fb90f05b4e2634d8b0e227dda5977d, type: 3}
+  m_Name: Skill_002
+  m_EditorClassIdentifier: Assembly-CSharp::SkillDataSO
+  skillName: SlimeGolemSmash
+  cooldown: 5
+  duration: 4
+  useEnergy: 30
+  offset: {x: 0, y: 0}
+  modules:
+  - rid: 3803184390791757895
+  references:
+    version: 2
+    RefIds:
+    - rid: 3803184390791757895
+      type: {class: EffectModule, ns: , asm: Assembly-CSharp}
+      data:
+        prefab: {fileID: 909452230894646114, guid: 28799b9fe1e63644e90c5977def1e9ab, type: 3}
+        effectData:
+          startup: 0
+          duration: 4
+          size: {x: 1, y: 1}
+          offset: {x: 0, y: 0}
+          hitboxes:
+          - duration: 0.5
+            size: {x: 0, y: 0}
+            offset: {x: 0, y: 0}
+            defenderHitData:
+              damage: 0
+              knockback: 0
+              buffs: 
+              debuffs: 
+          - duration: 0.5
+            size: {x: 0, y: 0}
+            offset: {x: 0, y: 0}
+            defenderHitData:
+              damage: 0
+              knockback: 0
+              buffs: 
+              debuffs: 
+        effect: {fileID: 0}

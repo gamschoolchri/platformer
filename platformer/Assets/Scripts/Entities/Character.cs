@@ -77,4 +77,20 @@ public class Character : MonoBehaviour
         hurtbox.gameObject.SetActive(isActive);
         isHurtboxActive = isActive;
     }
+    void OnDrawGizmosSelected()
+    {
+        Color originalColor = Gizmos.color;
+        Gizmos.color = Color.blue;
+        if (Application.isPlaying)
+        {
+            Gizmos.DrawWireCube(transform.position + (Vector3)data.HurtboxData.Offset, data.HurtboxData.Size);
+        }
+        else
+        {
+            ent = GetComponent<Entity>();
+            so = (EnemyDataSO)ent.EntityDataSO;
+            Gizmos.DrawWireCube(transform.position + (Vector3)so.HurtboxData.Offset, so.HurtboxData.Size);
+        }
+        Gizmos.color = originalColor;
+    }
 }

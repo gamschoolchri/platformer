@@ -1,4 +1,3 @@
-using Unity.Android.Gradle.Manifest;
 using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
@@ -91,7 +90,7 @@ public class Enemy : MonoBehaviour
     }
     void OnDrawGizmosSelected()
     {
-        if (UnityEngine.Application.isPlaying)
+        if (Application.isPlaying)
         {
             data.TargetDetectRange.DrawGizmo(transform.position, Color.darkRed);
             data.TargetSwitchRange.DrawGizmo(transform.position, Color.softRed);

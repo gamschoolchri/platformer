@@ -28,7 +28,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: VFX_Skill_001
+  m_Name: VFX_Skill_002
   serializedVersion: 6
   m_AnimatorParameters: []
   m_AnimatorLayers:
@@ -65,7 +65,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: bef1f0f6e71710e43a05b0012b818ac5, type: 2}
+  m_Motion: {fileID: 7400000, guid: ef2c9fb87e185fa4b94f613f6c81effa, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

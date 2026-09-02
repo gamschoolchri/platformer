@@ -162,6 +162,8 @@ public struct CharacterData
     [SerializeField] private int health;
     [SerializeField] private int maxEnergy;
     [SerializeField] private int energy;
+    [SerializeField] private int defaultStrength;
+    [SerializeField] private int strength;
     [SerializeField] private List<Buff> buffs;
     [SerializeField] private List<Buff> defaultBuffs;
     [SerializeField] private List<Debuff> debuffs;
@@ -174,6 +176,8 @@ public struct CharacterData
     public int Health { readonly get => health; set => health = Mathf.Clamp(value, 0, maxHealth); }
     public int MaxEnergy { readonly get => maxEnergy; set => maxEnergy = value; }
     public int Energy { readonly get => energy; set => energy = Mathf.Clamp(value, 0, maxEnergy); }
+    public int DefaultStrength { readonly get => defaultStrength; set => defaultStrength = value; }
+    public int Strength { readonly get => strength; set => strength = value; }
     public List<Buff> Buffs { readonly get => buffs; set => buffs = value; }
     public readonly IReadOnlyList<Buff> DefaultBuffs => defaultBuffs;
     public List<Debuff> Debuffs { readonly get => debuffs; set => debuffs = value; }
@@ -193,6 +197,8 @@ public struct CharacterData
         health = maxHealth;
         maxEnergy = so.MaxEnergy;
         energy = maxEnergy;
+        defaultStrength = so.DefaultStrengh;
+        strength = defaultStrength;
         defaultBuffs = (so.Buffs != null) ? new(so.Buffs) : new();
         defaultDebuffs = (so.Debuffs != null) ? new(so.Debuffs) : new();
         buffs = new(defaultBuffs);

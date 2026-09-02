@@ -6,6 +6,7 @@ public class CharacterDataSO : EntityDataSO
     [Header("세부 정보")]
     [SerializeField] private int maxHealth;
     [SerializeField] private int maxEnergy;
+    [SerializeField] private int defaultStrength;
     [SerializeField] private HurtboxData hurtboxData;
     [SerializeField] private List<Buff> buffs;
     [SerializeField] private List<Debuff> debuffs;
@@ -16,6 +17,7 @@ public class CharacterDataSO : EntityDataSO
 
     public int MaxHealth => maxHealth;
     public int MaxEnergy => maxEnergy;
+    public int DefaultStrengh => defaultStrength;
     public HurtboxData HurtboxData => hurtboxData;
     public IReadOnlyList<Buff> Buffs => buffs;
     public IReadOnlyList<Debuff> Debuffs => debuffs;
